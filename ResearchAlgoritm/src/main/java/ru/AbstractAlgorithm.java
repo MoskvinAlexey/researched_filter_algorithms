@@ -1,6 +1,8 @@
 package ru;
 
 
+import org.jnetpcap.packet.JPacket;
+
 import java.util.ArrayList;
 
 
@@ -18,17 +20,11 @@ public abstract class AbstractAlgorithm implements Runnable {
 
     }
 
-
-    public void run(){
-       double t1=getCurrentTime();
-       applyAlgorithm();
-       double t2 = getCurrentTime();
-       calcTimeOfFiltration(t1, t2);
-   }
+    protected abstract void nextPacket(JPacket packet);
 
     protected abstract void applyAlgorithm();
 
-    protected abstract void calcTimeOfFiltration(double t1, double t2);
+    protected abstract double calcTimeOfFiltration(double t1, double t2);
 
     protected abstract double getCurrentTime();
 
