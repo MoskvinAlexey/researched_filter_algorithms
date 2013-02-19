@@ -3,7 +3,16 @@ package ru;
 
 public class MainClass {
     public static void main(String[] args){
-        new Thread(new TrafficGenerator(new SimpleAlgorithm())).start();
+        Thread th = new Thread(new TrafficGenerator(new SimpleAlgorithm()));
+        th.start();
+        try {
+            th.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Done!");
+
+
     }
 
 }
