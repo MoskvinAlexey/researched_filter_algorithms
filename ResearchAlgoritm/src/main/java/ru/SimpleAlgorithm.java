@@ -25,7 +25,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
     protected void applyAlgorithm() {
         System.out.println(packet);
         try {
-             thread.sleep(5000);
+             thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
