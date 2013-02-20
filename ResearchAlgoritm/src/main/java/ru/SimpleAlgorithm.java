@@ -6,12 +6,14 @@ import java.util.*;
 public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
 
     JPacket packet;
+    Thread thread;
 
     public void run(){
-        double t1 = getCurrentTime();
+        thread = Thread.currentThread();
+        long t1 = getCurrentTime();
         applyAlgorithm();
-        double t2 = getCurrentTime();
-        System.out.println("Time received packet: " + calcTimeOfFiltration(t1,t2));
+        long t2 = getCurrentTime();
+        System.out.println("Time received packet: " + calcTimeOfFiltration(t1,t2) + "ms");
 
 
     }
@@ -23,7 +25,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
     protected void applyAlgorithm() {
         System.out.println(packet);
         try {
-             Thread.sleep(5);
+             thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -31,13 +33,13 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
     }
 
 
-    protected double calcTimeOfFiltration(double t1, double t2) {
+    protected long calcTimeOfFiltration(long t1, long t2) {
         return t2 - t1;
     }
 
 
-    protected double getCurrentTime() {
-        Calendar calendar = new GregorianCalendar();
-        return calendar.get(Calendar.SECOND);
+    protected long getCurrentTime() {
+
+        return System.currentTimeMillis();
     }
 }

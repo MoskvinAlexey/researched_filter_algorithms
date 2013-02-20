@@ -24,9 +24,9 @@ public abstract class AbstractAlgorithm implements Runnable {
 
     protected abstract void applyAlgorithm();
 
-    protected abstract double calcTimeOfFiltration(double t1, double t2);
+    protected abstract long calcTimeOfFiltration(long t1, long t2);
 
-    protected abstract double getCurrentTime();
+    protected abstract long getCurrentTime();
 
 
 

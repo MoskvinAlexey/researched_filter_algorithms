@@ -8,6 +8,7 @@ import org.jnetpcap.protocol.tcpip.Tcp;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class TrafficGenerator implements Runnable {
 
@@ -39,9 +40,12 @@ public class TrafficGenerator implements Runnable {
         packet.scan(Ethernet.ID);
 
         algorithm.nextPacket(packet);
-        es.submit(algorithm);
 
+        Future f1 = es.submit(algorithm);
+        while(!f1.isDone()){
 
+        }
+        es.shutdown();
     }
 
 }
