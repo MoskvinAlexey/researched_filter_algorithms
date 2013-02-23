@@ -1,4 +1,4 @@
-package ru;
+package FilterRuleModule;
 
 
 import java.io.File;

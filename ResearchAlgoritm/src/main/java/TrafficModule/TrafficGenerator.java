@@ -1,4 +1,5 @@
-package ru;
+package TrafficModule;
+import AlgorithmModule.AbstractAlgorithm;
 import org.jnetpcap.packet.JMemoryPacket;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.protocol.JProtocol;

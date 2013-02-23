@@ -1,5 +1,8 @@
-package ru;
+package GUIModule;
 
+
+import AlgorithmModule.SimpleAlgorithm;
+import TrafficModule.TrafficGenerator;
 
 public class MainClass {
     public static void main(String[] args){

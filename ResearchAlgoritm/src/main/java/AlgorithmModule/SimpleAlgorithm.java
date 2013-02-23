@@ -1,7 +1,7 @@
-package ru;
+package AlgorithmModule;
+
 
 import org.jnetpcap.packet.JPacket;
-import java.util.*;
 
 public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
 
