@@ -48,14 +48,14 @@ public class TrafficGenerator implements Runnable {
 
 
         try {
-            pcap.loop(5, jpacketHandler, "jNetPcap rocks!");
+            pcap.loop(5, jpacketHandler, "");
         } finally {
 
             pcap.close();
         }
 
         while(!future.isDone()){
-
+           //wait when last packet will handle
         }
         es.shutdown();
     }

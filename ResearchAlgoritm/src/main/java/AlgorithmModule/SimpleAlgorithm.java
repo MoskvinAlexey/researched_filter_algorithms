@@ -43,7 +43,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
 
             sIP = org.jnetpcap.packet.format.FormatUtils.ip(ip.source());
             dIP = org.jnetpcap.packet.format.FormatUtils.ip(ip.destination());
-            System.out.println("Пакет № " + count + ":" + sIP + ", " +dIP);
+            System.out.println("Пакет № " + count + ": " + sIP + ", " +dIP);
 
         }
         if(packet.hasHeader(tcp)){
