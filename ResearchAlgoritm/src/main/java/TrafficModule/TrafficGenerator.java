@@ -3,9 +3,6 @@ import AlgorithmModule.AbstractAlgorithm;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
-import org.jnetpcap.protocol.network.Ip4;
-
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -14,7 +11,7 @@ public class TrafficGenerator implements Runnable {
 
     public AbstractAlgorithm algorithm;
     public ExecutorService es;
-    final StringBuilder errbuf = new StringBuilder(); // For any error msgs
+    final StringBuilder errbuf = new StringBuilder();
     final String file = "data/example";
     public Future future;
 
@@ -43,8 +40,9 @@ public class TrafficGenerator implements Runnable {
 
             public void nextPacket(PcapPacket packet, String user) {
 
-                algorithm.nextPacket(packet);
+                algorithm.next(packet);
                 future = es.submit(algorithm);
+
             }
         };
 
@@ -55,7 +53,6 @@ public class TrafficGenerator implements Runnable {
 
             pcap.close();
         }
-
 
         while(!future.isDone()){
 

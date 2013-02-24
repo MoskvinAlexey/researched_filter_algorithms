@@ -3,6 +3,7 @@ package AlgorithmModule;
 
 import org.jnetpcap.packet.JPacket;
 import FilterRuleModule.FilterRules;
+import org.jnetpcap.packet.PcapPacket;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public abstract class AbstractAlgorithm implements Runnable {
 
     }
 
-    public abstract void nextPacket(JPacket packet);
+    public abstract void next(PcapPacket packet);
 
     protected abstract void applyAlgorithm();
 
