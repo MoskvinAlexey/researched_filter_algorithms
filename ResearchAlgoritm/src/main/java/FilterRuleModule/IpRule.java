@@ -6,7 +6,7 @@ import java.util.Map;
 public class IpRule {
     private String [] ruleAttributes = {"action", "in", "out", "protocol", "dIp", "sIp", "dPort", "sPort",
                                         "type_codeICMP", "preced", "tos", "frag", "frag_len", "ttl"};
-    private Map <String, String> ruleValue = new HashMap<String, String>();
+    private Map <String, String> ruleValue;
 //    private String action;
 //    private String in;
 //    private String out;
@@ -23,6 +23,7 @@ public class IpRule {
 //    private String ttl;
 
     public IpRule(Map<String, String> ruleArgs){
+        ruleValue = new HashMap<String, String>();
         for (int i=0; i< ruleAttributes.length; i++){
             ruleValue.put(ruleAttributes[i], ruleArgs.get(ruleAttributes[i]));
         }

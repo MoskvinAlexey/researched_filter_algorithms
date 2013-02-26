@@ -1,0 +1,9 @@
+ip:0:drop:logpkt,logses
+ip:1:accept:logpkt,logses:1:0:0:any:192.168.0.1:999:10.0.0.254:any:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
+ip:2:accept:logpkt,logses:0:1:0:any:10.0.0.254:any:192.168.0.1:999:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
+ip:3:accept:logpkt,logses:1:0:0:any:192.168.0.1:999:10.0.0.1:any:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
+ip:4:accept:logpkt,logses:0:1:0:any:10.0.0.1:any:192.168.0.1:999:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
+ip:5:accept:logpkt,logses:1:0:0:any:192.168.0.1:999:192.168.0.201:any:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
+ip:6:accept:logpkt,logses:0:1:0:any:192.168.0.201:any:192.168.0.1:999:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
+ip:7:accept:logpkt,logses:1:0:0:any:192.168.0.1:999:20.0.0.20:any:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
+ip:8:accept:logpkt,logses:0:1:0:any:20.0.0.20:any:192.168.0.1:999:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm

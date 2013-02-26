@@ -12,10 +12,11 @@ public class TrafficGenerator implements Runnable {
     public AbstractAlgorithm algorithm;
     public ExecutorService es;
     final StringBuilder errbuf = new StringBuilder();
-    final String file = "data/example";
+    final String file;
     public Future future;
 
-    public TrafficGenerator(AbstractAlgorithm algorithm){
+    public TrafficGenerator(AbstractAlgorithm algorithm, String filename){
+        file = filename;
         this.algorithm = algorithm;
         es = Executors.newSingleThreadExecutor();
     }
