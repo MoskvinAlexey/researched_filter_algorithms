@@ -1,6 +1,7 @@
 package AlgorithmModule;
 
 
+import FilterRuleModule.Rule;
 import org.jnetpcap.packet.JPacket;
 import FilterRuleModule.FilterRules;
 import org.jnetpcap.packet.PcapPacket;
@@ -11,13 +12,13 @@ import java.util.ArrayList;
 
 public abstract class AbstractAlgorithm implements Runnable {
 
-    public ArrayList<Byte> filterRules;
+    public ArrayList<Rule> filterRules;
 
     public AbstractAlgorithm(){
         filterRules = loadFilterRules();
     }
 
-    public ArrayList<Byte> loadFilterRules(){
+    public ArrayList<Rule> loadFilterRules(){
         return FilterRules.getFilterRules();
 
     }
