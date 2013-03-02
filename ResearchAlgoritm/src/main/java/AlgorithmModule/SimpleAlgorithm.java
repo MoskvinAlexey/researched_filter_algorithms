@@ -34,21 +34,22 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
 
         count++;
         PcapPacket packet =  packets.remove();
-        String sIP;
-        String dIP;
-        Ip4 ip = new Ip4();
-        Tcp tcp = new Tcp();
 
-        if (packet.hasHeader(ip)){
-
-            sIP = org.jnetpcap.packet.format.FormatUtils.ip(ip.source());
-            dIP = org.jnetpcap.packet.format.FormatUtils.ip(ip.destination());
-            System.out.println("Пакет № " + count + ": " + sIP + ", " +dIP);
-
-        }
-        if(packet.hasHeader(tcp)){
-            System.out.println(tcp.destination());
-        }
+//        String sIP;
+//        String dIP;
+//        Ip4 ip = new Ip4();
+//        Tcp tcp = new Tcp();
+//
+//        if (packet.hasHeader(ip)){
+//
+//            sIP = org.jnetpcap.packet.format.FormatUtils.ip(ip.source());
+//            dIP = org.jnetpcap.packet.format.FormatUtils.ip(ip.destination());
+//            System.out.println("Пакет № " + count + ": " + sIP + ", " +dIP);
+//
+//        }
+//        if(packet.hasHeader(tcp)){
+//            System.out.println(tcp.destination());
+//        }
 
 //        try {
 //             thread.sleep(2000);

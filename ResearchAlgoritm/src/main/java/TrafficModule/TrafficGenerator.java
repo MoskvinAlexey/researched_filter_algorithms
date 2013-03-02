@@ -3,6 +3,8 @@ import AlgorithmModule.AbstractAlgorithm;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
+
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -14,6 +16,7 @@ public class TrafficGenerator implements Runnable {
     final StringBuilder errbuf = new StringBuilder();
     final String file;
     public Future future;
+    long timestamp = 0;
 
     public TrafficGenerator(AbstractAlgorithm algorithm, String filename){
         file = filename;
@@ -40,17 +43,23 @@ public class TrafficGenerator implements Runnable {
         PcapPacketHandler<String> jpacketHandler = new PcapPacketHandler<String>() {
 
             public void nextPacket(PcapPacket packet, String user) {
-
+                long tempTimestamp=packet.getCaptureHeader().timestampInMillis();
+                if(timestamp!=0){
+                    try {
+                        Thread.currentThread().sleep(tempTimestamp-timestamp);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                timestamp=tempTimestamp;
                 algorithm.next(packet);
-                //взять время след. пакета сделать задержку
                 future = es.submit(algorithm);
-
             }
         };
 
 
         try {
-            pcap.loop(-1, jpacketHandler, "");
+            pcap.loop(20, jpacketHandler, "");
         } finally {
 
             pcap.close();
