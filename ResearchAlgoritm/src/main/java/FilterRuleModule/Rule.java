@@ -3,7 +3,7 @@ package FilterRuleModule;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IpRule {
+public class Rule {
     private String [] ruleAttributes = {"action", "in", "out", "protocol", "dIp", "sIp", "dPort", "sPort",
                                         "type_codeICMP", "preced", "tos", "frag", "frag_len", "ttl"};
     private Map <String, String> ruleValue;
@@ -22,7 +22,7 @@ public class IpRule {
 //    private String frag_len;
 //    private String ttl;
 
-    public IpRule(Map<String, String> ruleArgs){
+    public Rule(Map<String, String> ruleArgs){
         ruleValue = new HashMap<String, String>();
         for (int i=0; i< ruleAttributes.length; i++){
             ruleValue.put(ruleAttributes[i], ruleArgs.get(ruleAttributes[i]));

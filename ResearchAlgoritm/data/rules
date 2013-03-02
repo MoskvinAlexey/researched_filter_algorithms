@@ -7,3 +7,9 @@ ip:5:accept:logpkt,logses:1:0:0:any:192.168.0.1:999:192.168.0.201:any:any:any:an
 ip:6:accept:logpkt,logses:0:1:0:any:192.168.0.201:any:192.168.0.1:999:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
 ip:7:accept:logpkt,logses:1:0:0:any:192.168.0.1:999:20.0.0.20:any:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
 ip:8:accept:logpkt,logses:0:1:0:any:20.0.0.20:any:192.168.0.1:999:any:any:any:any:any:any:active::any:defses:deftout:1,2:noalarm
+
+type_rule:number:action:ip_dest:ip_source:port_dest:port_source:
+
+
+
+

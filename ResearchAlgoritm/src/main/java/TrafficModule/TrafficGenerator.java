@@ -42,6 +42,7 @@ public class TrafficGenerator implements Runnable {
             public void nextPacket(PcapPacket packet, String user) {
 
                 algorithm.next(packet);
+                //взять время след. пакета сделать задержку
                 future = es.submit(algorithm);
 
             }
@@ -49,7 +50,7 @@ public class TrafficGenerator implements Runnable {
 
 
         try {
-            pcap.loop(5, jpacketHandler, "");
+            pcap.loop(-1, jpacketHandler, "");
         } finally {
 
             pcap.close();
