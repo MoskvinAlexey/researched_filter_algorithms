@@ -16,12 +16,13 @@ public class TrafficGenerator implements Runnable {
     final StringBuilder errbuf = new StringBuilder();
     final String file;
     public Future future;
-    long timestamp = 0;
+    long timestamp;
 
     public TrafficGenerator(AbstractAlgorithm algorithm, String filename){
         file = filename;
         this.algorithm = algorithm;
         es = Executors.newSingleThreadExecutor();
+        timestamp = 0;
     }
 
 
@@ -43,6 +44,7 @@ public class TrafficGenerator implements Runnable {
         PcapPacketHandler<String> jpacketHandler = new PcapPacketHandler<String>() {
 
             public void nextPacket(PcapPacket packet, String user) {
+                byte [] packetInByte;
                 long tempTimestamp=packet.getCaptureHeader().timestampInMillis();
                 if(timestamp!=0){
                     try {
@@ -52,7 +54,8 @@ public class TrafficGenerator implements Runnable {
                     }
                 }
                 timestamp=tempTimestamp;
-                algorithm.next(packet);
+                packetInByte = packet.getByteArray(0, packet.size());
+                algorithm.next(packetInByte);
                 future = es.submit(algorithm);
             }
         };

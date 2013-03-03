@@ -23,7 +23,7 @@ public abstract class AbstractAlgorithm implements Runnable {
 
     }
 
-    public abstract void next(PcapPacket packet);
+    public abstract void next(byte[] packet);
 
     protected abstract void applyAlgorithm();
 
