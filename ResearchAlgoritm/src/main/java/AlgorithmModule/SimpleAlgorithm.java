@@ -2,10 +2,11 @@ package AlgorithmModule;
 
 
 
+
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
-
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -34,6 +35,9 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
 
         count++;
         PcapPacket packet =  packets.remove();
+        for(int i =0;i<filterRules.size();i++){
+            System.out.println(filterRules.get(i));
+        }
 
 //        String sIP;
 //        String dIP;
