@@ -16,7 +16,7 @@ public class FilterRules {
     public static ArrayList<Rule> macFilterRules = new ArrayList<Rule>();
     public static ArrayList<Rule> arpFilterRules= new ArrayList<Rule>();
     public static String [] ipRuleAttributes = {"number","action","ip_sorce","port_source","ip_dest","port_dest",
-                                                "protocols", "icmp_code"};
+                                                "protocols", "icmp_type"};
     public static String [] arpRuleAttributes = {"number","action","mac_source","ip_sorce","mac_dest","ip_dest",
                                                  "arp_messager"};
     public static String [] macRuleAttributes = {"number","action", "mac_source", "mac_dest"};

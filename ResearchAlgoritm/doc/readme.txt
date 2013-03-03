@@ -1,6 +1,6 @@
 Format ip rules:
 
-ip:number:action:ip_source:port_source:ip_dest:port_dest:protocols:icmp_code
+ip:number:action:ip_source:port_source:ip_dest:port_dest:protocols:icmp_type
 
 Format mac rules:
 

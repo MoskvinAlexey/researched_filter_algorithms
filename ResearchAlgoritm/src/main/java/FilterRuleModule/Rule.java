@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Rule implements Comparable {
     private String [] ruleAttributes = {"number","action","mac_source","mac_dest","arp_message","ip_source","ip_dest","port_source",
-                                          "port_dest","protocols", "icmp_code"};
+                                          "port_dest","protocols", "icmp_type"};
     public Map <String, String> ruleValue;
 
 
