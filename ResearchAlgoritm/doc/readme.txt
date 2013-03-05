@@ -8,4 +8,4 @@ mac:number:action:mac_source:mac_dest
 
 Format arp rules:
 
-arp:number:action:mac_source:ip_source:mac_dest_ip_dest:arp_message
+arp:number:action:mac_source:ip_source:mac_dest_ip_dest:arp_opcode

@@ -5,22 +5,22 @@ package AlgorithmModule;
 
 import org.jnetpcap.packet.JMemoryPacket;
 import org.jnetpcap.packet.JPacket;
-import org.jnetpcap.packet.PcapPacket;
+import org.jnetpcap.packet.format.FormatUtils;
+import org.jnetpcap.protocol.JProtocol;
 import org.jnetpcap.protocol.lan.Ethernet;
 import org.jnetpcap.protocol.network.Arp;
 import org.jnetpcap.protocol.network.Icmp;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+
+import java.util.*;
 
 
 public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
 
     Queue<byte[]> packets = new LinkedList<byte[]>();
     Thread thread;
+    int count =1;
 
     public void run(){
         thread = Thread.currentThread();
@@ -41,6 +41,15 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
         JPacket packet = new JMemoryPacket(Ethernet.ID, packetInByte);
         HashMap <String,String> packetInHash =  encodePacketToHash(packet);
 
+        System.out.println("==============Packet " + count + "==============");
+        Iterator it = packetInHash.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            System.out.println(pairs.getKey() + " = " + pairs.getValue());
+            it.remove();
+        }
+        System.out.println("==================================");
+        count++;
     }
 
 
@@ -55,24 +64,49 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
     }
 
     private static HashMap<String,String> encodePacketToHash(JPacket packet){
-        Ethernet eth = new Ethernet();
-        Arp arp = new Arp();
-        Ip4 ip = new Ip4();
-        Tcp tcp = new Tcp();
-        Icmp icmp = new Icmp();
-
-        String sIP;
-        String dIP;
-
         HashMap<String,String> packetInHash = new HashMap<String, String>();
-        if (packet.hasHeader(ip)){
+        if (packet.hasHeader(JProtocol.ETHERNET_ID)) {
+            Ethernet eth = new Ethernet();
+            packet.getHeader(eth);
+            packetInHash.put("mac_source", FormatUtils.mac(eth.source()));
+            packetInHash.put("mac_dest", FormatUtils.mac(eth.destination()));
 
-            sIP = org.jnetpcap.packet.format.FormatUtils.ip(ip.source());
-            dIP = org.jnetpcap.packet.format.FormatUtils.ip(ip.destination());
+            if (packet.hasHeader(JProtocol.ARP_ID)) {
+                Arp arp = new Arp();
+                packet.getHeader(arp);
+                packetInHash.put("ip_source",FormatUtils.ip(arp.spa()));
+                packetInHash.put("ip_dest",FormatUtils.ip(arp.tpa()));
+                packetInHash.put("arp_opcode",arp.operationEnum().toString());
 
-        }
-        if(packet.hasHeader(tcp)){
-            System.out.println(tcp.destination());
+
+            }
+            else if (packet.hasHeader(JProtocol.IP4_ID)) {
+                Ip4 ip = new Ip4();
+                packet.getHeader(ip);
+                packetInHash.put("ip_source",FormatUtils.ip(ip.source()));
+                packetInHash.put("ip_dest",FormatUtils.ip(ip.destination()));
+                packetInHash.put("protocols",ip.typeDescription().replace("next:",""));
+
+                if(packet.hasHeader(JProtocol.ICMP_ID)){
+                    Icmp icmp = new Icmp();
+                    packet.getHeader(icmp);
+                    packetInHash.put("icmp_type",Integer.toString(icmp.type()));
+                }
+                else if (packet.hasHeader(JProtocol.TCP_ID)) {
+                    Tcp tcp = new Tcp();
+                    packetInHash.put("port_source", Integer.toString(tcp.source()));
+                    packetInHash.put("port_dest", Integer.toString(tcp.destination()));
+                }
+
+                else{
+                    // Here you can add translations of other headers on transport layer
+                }
+
+            }
+            else {
+                // Here you can add translations of other headers on network layer
+            }
+
         }
 
         return  packetInHash;

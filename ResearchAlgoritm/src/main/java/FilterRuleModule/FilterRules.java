@@ -18,7 +18,7 @@ public class FilterRules {
     public static String [] ipRuleAttributes = {"number","action","ip_sorce","port_source","ip_dest","port_dest",
                                                 "protocols", "icmp_type"};
     public static String [] arpRuleAttributes = {"number","action","mac_source","ip_sorce","mac_dest","ip_dest",
-                                                 "arp_messager"};
+                                                 "arp_opcode"};
     public static String [] macRuleAttributes = {"number","action", "mac_source", "mac_dest"};
 
     public FilterRules(String fileName){

@@ -17,6 +17,7 @@ public class TrafficGenerator implements Runnable {
     final String file;
     public Future future;
     long timestamp;
+    byte [] packetInByte;
 
     public TrafficGenerator(AbstractAlgorithm algorithm, String filename){
         file = filename;
@@ -44,7 +45,7 @@ public class TrafficGenerator implements Runnable {
         PcapPacketHandler<String> jpacketHandler = new PcapPacketHandler<String>() {
 
             public void nextPacket(PcapPacket packet, String user) {
-                byte [] packetInByte;
+
                 long tempTimestamp=packet.getCaptureHeader().timestampInMillis();
                 if(timestamp!=0){
                     try {
@@ -62,7 +63,7 @@ public class TrafficGenerator implements Runnable {
 
 
         try {
-            pcap.loop(20, jpacketHandler, "");
+            pcap.loop(-1, jpacketHandler, "");
         } finally {
 
             pcap.close();
