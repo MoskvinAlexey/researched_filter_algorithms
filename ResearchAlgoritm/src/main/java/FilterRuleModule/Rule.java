@@ -3,10 +3,10 @@ package FilterRuleModule;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Rule {
-    private String [] ruleAttributes = {"action","mac_source","mac_dest","arp_message","ip_source","ip_dest","port_source",
-                                          "port_dest","protocols", "icmp_code"};
-    private Map <String, String> ruleValue;
+public class Rule implements Comparable {
+    private String [] ruleAttributes = {"number","action","mac_source","mac_dest","arp_opcode","ip_source","ip_dest","port_source",
+                                          "port_dest","protocols", "icmp_type"};
+    public Map <String, String> ruleValue;
 
 
     public Rule(Map<String, String> ruleArgs){
@@ -18,5 +18,17 @@ public class Rule {
 
     public String toString(){
         return ruleValue.toString();
+    }
+
+
+    public int compareTo(Object object) {
+        Rule tmpRule = (Rule) object;
+        int number = Integer.parseInt(tmpRule.ruleValue.get("number"));
+        int thisNumber = Integer.parseInt(this.ruleValue.get("number"));
+        if(thisNumber<number)
+            return -1;
+        else if (thisNumber > number)
+            return 1;
+        return 0;
     }
 }

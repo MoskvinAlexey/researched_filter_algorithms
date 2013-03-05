@@ -12,18 +12,18 @@ import java.util.ArrayList;
 
 public abstract class AbstractAlgorithm implements Runnable {
 
-    public ArrayList<Rule> filterRules;
+    public ArrayList<ArrayList<Rule>> filterRules;
 
     public AbstractAlgorithm(){
         filterRules = loadFilterRules();
     }
 
-    public ArrayList<Rule> loadFilterRules(){
+    public ArrayList<ArrayList<Rule>> loadFilterRules(){
         return FilterRules.getFilterRules();
 
     }
 
-    public abstract void next(PcapPacket packet);
+    public abstract void next(byte[] packet);
 
     protected abstract void applyAlgorithm();
 
