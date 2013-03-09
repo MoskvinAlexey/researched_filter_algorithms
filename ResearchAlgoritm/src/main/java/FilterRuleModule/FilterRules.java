@@ -16,7 +16,7 @@ public class FilterRules {
     public static ArrayList<Rule> macFilterRules = new ArrayList<Rule>();
     public static ArrayList<Rule> arpFilterRules= new ArrayList<Rule>();
 
-    public static String [] ipRuleAttributes = {"number","action","ip_sorce","port_source","ip_dest","port_dest",
+    public static String [] ipRuleAttributes = {"number","action","ip_source","port_source","ip_dest","port_dest",
                                                 "protocols", "icmp_type"};
     public static String [] arpRuleAttributes = {"number","action","mac_source","ip_sorce","mac_dest","ip_dest",
                                                  "arp_opcode"};
@@ -57,22 +57,48 @@ public class FilterRules {
         filterRules.add(ipFilterRules);
     }
 
+    /**
+     *
+     * @param nextLine - строка, содержащая правило фильтрации
+     *
+     */
     private static void parseCurrentRule(String nextLine) {
-        Map <String,String> ruleValue = new HashMap<String, String>();
+        HashMap <String,String> ruleValue = new HashMap<String, String>();
         String[] nextRule;
         nextRule = nextLine.split(":");
         if(nextRule.length >=3){
             if(nextRule[0].equals("mac")){
                 for(int i=0;i< nextRule.length - 1;i++){
+                    if(nextRule[i+1].equals("")){
+                        ruleValue.put(macRuleAttributes[i], "any");
+                    }
+                    else{
+                        ruleValue.put(macRuleAttributes[i], nextRule[i+1]);
+                    }
 
-                    ruleValue.put(macRuleAttributes[i], nextRule[i+1]);
+                }
+                if(nextRule.length < macRuleAttributes.length){
+
+                    for(int i=nextRule.length -1;i<macRuleAttributes.length;i++){
+                        ruleValue.put(macRuleAttributes[i],"any");
+                    }
                 }
                 macFilterRules.add(new Rule(ruleValue));
             }
             if(nextRule[0].equals("arp")){
                 for(int i=0;i< nextRule.length - 1;i++){
 
-                    ruleValue.put(arpRuleAttributes[i], nextRule[i+1]);
+                    if(nextRule[i+1].equals("")){
+                        ruleValue.put(arpRuleAttributes[i], "any");
+                    }
+                    else{
+                        ruleValue.put(arpRuleAttributes[i], nextRule[i+1]);
+                    }
+                }
+                if(nextRule.length < arpRuleAttributes.length){
+                    for(int i=nextRule.length-1;i<arpRuleAttributes.length;i++){
+                        ruleValue.put(arpRuleAttributes[i],"any");
+                    }
                 }
                 arpFilterRules.add(new Rule(ruleValue));
 
@@ -80,7 +106,17 @@ public class FilterRules {
             if(nextRule[0].equals("ip")){
                 for(int i=0;i< nextRule.length - 1;i++){
 
-                    ruleValue.put(ipRuleAttributes[i], nextRule[i+1]);
+                    if(nextRule[i+1].equals("")){
+                        ruleValue.put(ipRuleAttributes[i], "any");
+                    }
+                    else{
+                        ruleValue.put(ipRuleAttributes[i], nextRule[i+1]);
+                    }
+                }
+                if(nextRule.length < ipRuleAttributes.length){
+                    for(int i=nextRule.length -1;i<ipRuleAttributes.length;i++){
+                        ruleValue.put(ipRuleAttributes[i],"any");
+                    }
                 }
                 ipFilterRules.add(new Rule(ruleValue));
             }

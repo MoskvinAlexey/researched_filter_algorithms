@@ -2,10 +2,7 @@ package AlgorithmModule;
 
 
 import FilterRuleModule.Rule;
-import org.jnetpcap.packet.JPacket;
 import FilterRuleModule.FilterRules;
-import org.jnetpcap.packet.PcapPacket;
-
 import java.util.ArrayList;
 
 

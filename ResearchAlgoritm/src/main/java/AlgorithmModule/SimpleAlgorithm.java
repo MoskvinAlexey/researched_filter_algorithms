@@ -3,6 +3,7 @@ package AlgorithmModule;
 
 
 
+import FilterRuleModule.Rule;
 import org.jnetpcap.packet.JMemoryPacket;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.format.FormatUtils;
@@ -38,22 +39,76 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
 
     protected void applyAlgorithm() {
         byte[] packetInByte =  packets.remove();
-        JPacket packet = new JMemoryPacket(Ethernet.ID, packetInByte);
+        JPacket packet = new JMemoryPacket(Ethernet.ID,packetInByte);
         HashMap <String,String> packetInHash =  encodePacketToHash(packet);
+        Rule matchRule = sequentialSearchFilterRules(packetInHash, filterRules);
 
-        System.out.println("==============Packet " + count + "==============");
-        Calendar cl = Calendar.getInstance();
-        cl.setTimeInMillis(packet.getCaptureHeader().timestampInMillis());
-        System.out.println(cl.get(Calendar.SECOND) + "." + cl.get(Calendar.MILLISECOND));
-        Iterator it = packetInHash.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            System.out.println(pairs.getKey() + " = " + pairs.getValue());
-            it.remove();
-        }
-        System.out.println("==================================");
-        count++;
+
+
+//        System.out.println("==============Packet " + count + "==============");
+//        Calendar cl = Calendar.getInstance();
+//        cl.setTimeInMillis(packet.getCaptureHeader().timestampInMillis());
+//        System.out.println(cl.get(Calendar.SECOND) + "." + cl.get(Calendar.MILLISECOND));
+//        Iterator it = packetInHash.entrySet().iterator();
+//        while (it.hasNext()) {
+//            Map.Entry pairs = (Map.Entry)it.next();
+//            System.out.println(pairs.getKey() + " = " + pairs.getValue());
+//            it.remove();
+//        }
+//        System.out.println("==================================");
+//         count++;
     }
+
+    private static Rule sequentialSearchFilterRules(HashMap<String, String> packetInHash, ArrayList<ArrayList<Rule>> filterRules) {
+        boolean ruleIsMatch = false;
+        for(int i=0; i< filterRules.size();i++){
+            for(int j=0;j< filterRules.get(i).size(); j++){
+                Rule nextRule = filterRules.get(i).get(j);
+                Iterator it = nextRule.getAllField().iterator();
+                //Compare packet with filter rule
+                while (it.hasNext()){
+                    String nextRuleField = (String)it.next();
+                    Object nextRuleFieldValue = nextRule.get(nextRuleField);
+                    if(nextRuleFieldValue!=null && packetInHash.containsKey(nextRuleField)){
+                        if(nextRuleFieldValue.equals("ip_source")||nextRuleFieldValue.equals("ip_dest")){
+                            if(Rule.compareIp(nextRuleFieldValue,packetInHash.get(nextRuleField)))
+                                ruleIsMatch = true;
+
+                            else ruleIsMatch=false;
+                        }
+                        else if(nextRuleFieldValue.equals("port_source")||nextRuleFieldValue.equals("port_dest")){
+                            if(Rule.comparePort(nextRuleFieldValue,packetInHash.get(nextRuleField)))
+                                ruleIsMatch = true;
+
+                            else ruleIsMatch=false;
+
+                        }
+                        else if(nextRuleFieldValue.equals("protocols")){
+                            if(Rule.compareProtocol(nextRuleFieldValue,packetInHash.get(nextRuleField)))
+                                ruleIsMatch = true;
+
+                            else ruleIsMatch=false;
+                        }
+                        else {
+                            if(nextRuleFieldValue.equals(packetInHash.get(nextRuleField))){
+                                ruleIsMatch = true;
+                            }
+                            else ruleIsMatch = false;
+
+                        }
+
+                    }
+
+                }
+                if(ruleIsMatch){
+                    return nextRule;
+                }
+
+            }
+        }
+        return null;
+    }
+
 
 
     protected long calcTimeOfFiltration(long t1, long t2) {
@@ -69,9 +124,10 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
     /**
      *
      * @param packet
-     * @return
+     * @return HashMap<String,String>
      */
     private static HashMap<String,String> encodePacketToHash(JPacket packet){
+        //System.out.println(packet);
         HashMap<String,String> packetInHash = new HashMap<String, String>();
         if (packet.hasHeader(JProtocol.ETHERNET_ID)) {
             Ethernet eth = new Ethernet();
@@ -102,6 +158,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
                 }
                 else if (packet.hasHeader(JProtocol.TCP_ID)) {
                     Tcp tcp = new Tcp();
+                    packet.getHeader(tcp);
                     packetInHash.put("port_source", Integer.toString(tcp.source()));
                     packetInHash.put("port_dest", Integer.toString(tcp.destination()));
                 }
@@ -116,11 +173,8 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
             }
 
         }
-
         return  packetInHash;
     }
 
-    private static boolean comparePacketWithRule( HashMap<String,String> packetInHash) {
-        return false;
-    }
+
 }
