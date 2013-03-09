@@ -61,9 +61,8 @@ public class TrafficGenerator implements Runnable {
             }
         };
 
-
         try {
-            pcap.loop(-1, jpacketHandler, "");
+            pcap.loop(10, jpacketHandler, "");
         } finally {
 
             pcap.close();
