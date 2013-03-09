@@ -42,6 +42,9 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
         HashMap <String,String> packetInHash =  encodePacketToHash(packet);
 
         System.out.println("==============Packet " + count + "==============");
+        Calendar cl = Calendar.getInstance();
+        cl.setTimeInMillis(packet.getCaptureHeader().timestampInMillis());
+        System.out.println(cl.get(Calendar.SECOND) + "." + cl.get(Calendar.MILLISECOND));
         Iterator it = packetInHash.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
@@ -63,6 +66,11 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
         return System.currentTimeMillis();
     }
 
+    /**
+     *
+     * @param packet
+     * @return
+     */
     private static HashMap<String,String> encodePacketToHash(JPacket packet){
         HashMap<String,String> packetInHash = new HashMap<String, String>();
         if (packet.hasHeader(JProtocol.ETHERNET_ID)) {
