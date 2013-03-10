@@ -1,10 +1,10 @@
-mac:0:drop
+mac:0:accept
 mac:4:accept:001111111111:007777777777
 mac:3:accept:000000000001:006666666666
 mac:2:accept:005555555555:006666666666
 mac:1:accept:000055555555:006666666666
-ip:0:drop
-ip:800:accept:192.168.0.1::any:1
+ip:0:accept
+ip:800:accept:192.168.0.1::any
 ip:7:accept:10.0.0.254:any:192.168.0.1:999
 ip:6:accept:192.168.0.1:999:10.0.0.1:any
 ip:5:accept:10.0.0.1:any:192.168.0.1:999

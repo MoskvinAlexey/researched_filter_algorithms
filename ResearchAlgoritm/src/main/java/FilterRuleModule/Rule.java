@@ -12,9 +12,8 @@ public class Rule implements Comparable {
 
     public Rule(HashMap<String, String> ruleArgs){
         ruleValue = new HashMap<String, String>();
-        for (int i=0; i< ruleAttributes.length; i++){
+        for (int i=0; i< ruleAttributes.length; i++)
             ruleValue.put(ruleAttributes[i], ruleArgs.get(ruleAttributes[i])); //записываем соответствующие значение или null
-        }
     }
 
     public String toString(){
@@ -39,27 +38,16 @@ public class Rule implements Comparable {
         return 0;
     }
 
-    /**
-     *
-     * @param ipInRule
-     * @param ipInPacket
-     * @return true, если ip адрес из пакета подходит под правило фильтрации
-     *          false, если не подходит
-     * Первым аргументом обязательно должен быть ip из правила фильтрации, а вторым - ip из пакета
-     */
+
     public static boolean compareIp(Object ipInRule, String ipInPacket) {
-        if(ipInRule.equals(ipInPacket) || ipInRule.equals("any")){
-            return true;
-        }
-        else
-            return false;
+        return ipInRule.equals(ipInPacket) || ipInRule.equals("any");
     }
 
     public static boolean comparePort(Object portInRule, String portInPacket) {
-        return false;
+        return portInRule.equals(portInPacket) || portInRule.equals("any");
     }
 
     public static boolean compareProtocol(Object protocolInRule, String protocolInPacket) {
-        return false;
+        return protocolInRule.equals(protocolInPacket) || protocolInRule.equals("any");
     }
 }

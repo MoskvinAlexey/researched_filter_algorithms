@@ -5,10 +5,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class FilterRules {
+
+    public static final int IP =2;
+    public static final int ARP=1;
+    public static final int MAC=0;
 
     public File fileWithFilterRules;
     public static ArrayList<ArrayList<Rule>> filterRules = new ArrayList<ArrayList<Rule>>();
@@ -50,11 +53,11 @@ public class FilterRules {
         br.close();
 
         Collections.sort(macFilterRules);
-        filterRules.add(macFilterRules);
+        filterRules.add(MAC,macFilterRules);
         Collections.sort(arpFilterRules);
-        filterRules.add(arpFilterRules);
+        filterRules.add(ARP,arpFilterRules);
         Collections.sort(ipFilterRules);
-        filterRules.add(ipFilterRules);
+        filterRules.add(IP,ipFilterRules);
     }
 
     /**
@@ -66,10 +69,10 @@ public class FilterRules {
         HashMap <String,String> ruleValue = new HashMap<String, String>();
         String[] nextRule;
         nextRule = nextLine.split(":");
-        if(nextRule.length >=3){
+        if(nextRule.length >=3){ //рассматриваем только правила с заполненными обязательными полями
             if(nextRule[0].equals("mac")){
                 for(int i=0;i< nextRule.length - 1;i++){
-                    if(nextRule[i+1].equals("")){
+                    if(nextRule[i+1].equals("")){ //если в правиле пропущено значение
                         ruleValue.put(macRuleAttributes[i], "any");
                     }
                     else{
@@ -77,7 +80,7 @@ public class FilterRules {
                     }
 
                 }
-                if(nextRule.length < macRuleAttributes.length){
+                if(nextRule.length < macRuleAttributes.length){ //если в правиле не заполнены необязательные поля
 
                     for(int i=nextRule.length -1;i<macRuleAttributes.length;i++){
                         ruleValue.put(macRuleAttributes[i],"any");
