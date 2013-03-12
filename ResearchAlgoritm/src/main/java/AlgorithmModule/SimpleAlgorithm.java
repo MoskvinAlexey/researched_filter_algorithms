@@ -1,8 +1,5 @@
 package AlgorithmModule;
 
-
-
-
 import FilterRuleModule.FilterRules;
 import FilterRuleModule.Rule;
 import org.jnetpcap.packet.JMemoryPacket;
@@ -56,6 +53,26 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
         count++;
     }
 
+
+    /**
+     * Последовательное применения правил фильтрации из filterRules к пакету packetInHash.
+     * Проверка идет исходя из содержания правила: сравниваются только те поля которые есть и в правиле и в пакете
+     * Правило считается подходящим, если все поля правила совпали с соответствующими полями пакета.
+     * Применения правил происходит последовательно, согласно структуре заданной в filterRules.
+     * Если правило является подходящим, но является правилом "на пропуск" или "на передачу" и в структуре filterRules есть
+     * правила более "высокого" уровня, такое правило не применяется.
+     *
+     * Правила, имеющие индекс 0 в массивах в структуре filterRules являются глобальными и проверяются последними в своих
+     * массивах.     *
+     *
+     * @param packetInHash - пакет в формате хэш таблицы (для перевода пакета из формата Jpacket в хэш таблицу используется
+     * метод SimpleAlgorithm.encodePacketToHash(JPacket packet)
+     * @param filterRules - правила фильтрации, заданные в формате массива, где каждый элемент - массив объектов типа Rule, т.е.
+     * правил. Данные массивы отличаются тем, что правила в них одного определенного типа (mac, arp или ip)
+     *
+     * @return строка в формате type:num, где type - целое число, соотв. типу правила (mac - 0, arp- 1, ip -2), num - номер правила
+     */
+
     private static String sequentialSearchFilterRules(HashMap<String, String> packetInHash, ArrayList<ArrayList<Rule>> filterRules) {
         boolean ruleIsMatch = false;
         for(int i=0; i< filterRules.size();i++){
@@ -71,7 +88,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
                     Object nextRuleFieldValue = nextRule.get(nextRuleField);
                     if(nextRuleFieldValue!=null && packetInHash.containsKey(nextRuleField)){
                         if(nextRuleField.equals("ip_source")||nextRuleField.equals("ip_dest")){
-                            if(Rule.compareIp(nextRuleFieldValue,packetInHash.get(nextRuleField)))
+                            if(Rule.compareIp((String)nextRuleFieldValue,packetInHash.get(nextRuleField)))
                                 ruleIsMatch = true;
 
                             else ruleIsMatch=false;
@@ -130,7 +147,28 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
         return System.currentTimeMillis();
     }
 
-
+    /**
+     * Метод предназначен для перевод пакета типа JPacket в хэш таблицу
+     * Метод анализирует заголовки пакета канального, сетевого и транспортного уровня. В зависимости от наличия заголовков
+     * в таблицу добавляются соответствующие значения. Ниже перечисленые протоколы, пакеты которых может разбирать метод
+     * и соответствующие ключи, попадающие в таблице при наличии заголовков данных протоколов.
+     *
+     * Канальный уровень:
+     * Ethetnet: mac_source, mac_dest
+     *
+     * Сетевой уровень:
+     * Arp: ip_source, ip_dest, arp_opcode
+     * Ip4: ip_source, ip_dest, protocols(вложенный протокол транспортного уровня)
+     * Icmp: icmp_type (целое число, обозначающее тип сообщения)
+     *
+     * Транспортный уровень:
+     * Tcp: port_source, port_dest
+     * Udp: port_source, port_dest
+     *
+     * @param packet пакет типа JPacket библиотеки jnetpcap
+     *
+     * @return хэш таблица с соответствующими ключами и значениями
+     */
     private static HashMap<String,String> encodePacketToHash(JPacket packet){
         //System.out.println(packet);
         HashMap<String,String> packetInHash = new HashMap<String, String>();
