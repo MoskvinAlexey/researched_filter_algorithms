@@ -12,6 +12,7 @@ import org.jnetpcap.protocol.network.Icmp;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
+import org.springframework.util.StopWatch;
 
 import java.util.*;
 
@@ -19,17 +20,17 @@ import java.util.*;
 public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
 
     Queue<byte[]> packets = new LinkedList<byte[]>();
-    Thread thread;
     int count =1;
-
     public void run(){
-        thread = Thread.currentThread();
+
+        StopWatch watch = new StopWatch();
+        watch.start();
         long t1 = getCurrentTime();
         applyAlgorithm();
         long t2 = getCurrentTime();
+        watch.stop();
         System.out.println("Time of handle packet: " + calcTimeOfFiltration(t1,t2) + "ms");
-
-
+        System.out.println("Time of handle packet: " + watch.getLastTaskTimeMillis() + "ms");
     }
     public void next(byte[] packet){
         this.packets.add(packet);
@@ -39,8 +40,14 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
     protected void applyAlgorithm() {
         byte[] packetInByte =  packets.remove();
         JPacket packet = new JMemoryPacket(Ethernet.ID,packetInByte);
+        StopWatch watch2 = new StopWatch();
+        watch2.start();
         HashMap <String,String> packetInHash =  encodePacketToHash(packet);
+        watch2.stop();
+        StopWatch watch = new StopWatch();
+        watch.start();
         String result = sequentialSearchFilterRules(packetInHash, filterRules);
+        watch.stop();
         System.out.println("==============Packet " + count + "==============");
         Iterator it = packetInHash.entrySet().iterator();
         while (it.hasNext()) {
@@ -51,6 +58,8 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
         System.out.println("Application rule: " + result);
         System.out.println("==================================");
         count++;
+        System.out.println("Time of sequentialSearchFilterRules: " + watch.getLastTaskTimeMillis() + "ms");
+        System.out.println("Time of encodePacketToHash : " + watch2.getLastTaskTimeMillis() + "ms");
     }
 
 
@@ -94,14 +103,14 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
                             else ruleIsMatch=false;
                         }
                         else if(nextRuleField.equals("port_source")||nextRuleField.equals("port_dest")){
-                            if(Rule.comparePort(nextRuleFieldValue,packetInHash.get(nextRuleField)))
+                            if(Rule.comparePort((String) nextRuleFieldValue,packetInHash.get(nextRuleField)))
                                 ruleIsMatch = true;
 
                             else ruleIsMatch=false;
 
                         }
                         else if(nextRuleField.equals("protocols")){
-                            if(Rule.compareProtocol(nextRuleFieldValue,packetInHash.get(nextRuleField)))
+                            if(Rule.compareProtocol((String)nextRuleFieldValue,packetInHash.get(nextRuleField)))
                                 ruleIsMatch = true;
 
                             else ruleIsMatch=false;
@@ -242,7 +251,6 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
         }
         letters[words.length] = 'p';
         return new String(letters).toLowerCase(Locale.ENGLISH);
-
 
     }
 

@@ -3,8 +3,7 @@ import AlgorithmModule.AbstractAlgorithm;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
-
-import java.util.Date;
+import org.springframework.util.StopWatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -57,12 +56,18 @@ public class TrafficGenerator implements Runnable {
                 timestamp=tempTimestamp;
                 packetInByte = packet.getByteArray(0, packet.size());
                 algorithm.next(packetInByte);
+
                 future = es.submit(algorithm);
+
             }
         };
 
         try {
+            StopWatch watch = new StopWatch();
+            watch.start();
             pcap.loop(10, jpacketHandler, "");
+            watch.stop();
+            System.out.println("Time of take packet from file: " + watch.getLastTaskTimeMillis() + "ms");
         } finally {
 
             pcap.close();

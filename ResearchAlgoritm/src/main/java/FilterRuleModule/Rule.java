@@ -86,13 +86,41 @@ public class Rule implements Comparable {
 
     }
 
-    public static boolean comparePort(Object portInRule, String portInPacket) {
-        return portInRule.equals(portInPacket) || portInRule.equals("any");
+    public static boolean comparePort(String portInRule, String portInPacket) {
+
+        if(portInRule.equals(portInPacket) || portInRule.equals("any"))
+            return true;
+        else{
+            String[] partsPortInRule = portInRule.split(",");
+            for(int i=0; i<partsPortInRule.length;i++){
+                String[] range = partsPortInRule[i].split("-");
+                if(range.length==1){
+                    if(partsPortInRule[i].equals(portInPacket)) return true;
+                }
+                else{
+                int min = Integer.parseInt(range[0]);
+                int max = Integer.parseInt(range[1]);
+                int val  = Integer.parseInt(portInPacket);
+
+                if(val>=min && val <=max) return true;
+
+                }
+                }
+            }
+        return false;
+
     }
 
-    public static boolean compareProtocol(Object protocolInRule, String protocolInPacket) {
-        return protocolInRule.equals(protocolInRule) || protocolInRule.equals("any");
-
+    public static boolean compareProtocol(String protocolInRule, String protocolInPacket){
+        String [] partsProtocolInRule = protocolInRule.split(",");
+        if(partsProtocolInRule.length==1)
+            return protocolInRule.equals(protocolInPacket) || protocolInRule.equals("any");
+        else{
+            for(int i=0; i< partsProtocolInRule.length;i++){
+                if(partsProtocolInRule[i].equals(protocolInPacket)) return true;
+            }
+        }
+        return false;
     }
 
 
