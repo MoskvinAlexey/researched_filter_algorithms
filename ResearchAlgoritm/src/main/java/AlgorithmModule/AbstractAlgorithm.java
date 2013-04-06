@@ -7,12 +7,13 @@ import java.util.ArrayList;
 
 
 
-public abstract class AbstractAlgorithm implements Runnable {
+public abstract class AbstractAlgorithm {
 
-    public ArrayList<ArrayList<Rule>> filterRules;
+    private static ArrayList<ArrayList<Rule>> filterRules;       // сделать public и типа FilterRules, тогда в алгоритме будут вызовы filterRules.get
 
     public AbstractAlgorithm(){
-        filterRules = loadFilterRules();
+        filterRules = loadFilterRules();      //FilterRules filterRules = new FilterRules("data/rules");
+                                              //обернуть в прокси, чтобы считать количество обращений к правилам
     }
 
     public ArrayList<ArrayList<Rule>> loadFilterRules(){
@@ -20,13 +21,38 @@ public abstract class AbstractAlgorithm implements Runnable {
 
     }
 
-    public abstract void next(byte[] packet);
+    protected abstract String applyAlgorithm(Object packet);
 
-    protected abstract void applyAlgorithm();
+    protected abstract Object preparePacket(byte [] packet);
 
-    protected abstract long calcTimeOfFiltration(long t1, long t2);
+    /**
+     *
+     * @param ruleType - тип правил фильтрации: IP =2, ARP=1, MAC=0
+     * @param ruleNumber
+     * @return правило фильтрации из таблицы ruleType, с номером в таблице ruleNumber
+     */
 
-    protected abstract long getCurrentTime();
+
+    //перенести всё в FilterRules
+
+    protected static Rule getFilterRuleSingle(int ruleType, int ruleNumber){
+        return filterRules.get(ruleType).get(ruleNumber);
+    }
+
+    protected static int sizeFilterRules(){
+        return filterRules.size();
+    }
+
+    protected static int sizeFilterRuleOfOneType(int ruleType){
+        return filterRules.get(ruleType).size();
+    }
+
+    protected static boolean filterRuleOfOneTypeIsEmpty(int ruleType){
+        return filterRules.get(ruleType).isEmpty();
+    }
+
+
+
 
 
 

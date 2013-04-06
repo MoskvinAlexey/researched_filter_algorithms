@@ -17,49 +17,22 @@ import org.springframework.util.StopWatch;
 import java.util.*;
 
 
-public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
+public class SimpleAlgorithm extends AbstractAlgorithm {
 
-    Queue<byte[]> packets = new LinkedList<byte[]>();
-    int count =1;
-    public void run(){
 
-        StopWatch watch = new StopWatch();
-        watch.start();
-        long t1 = getCurrentTime();
-        applyAlgorithm();
-        long t2 = getCurrentTime();
-        watch.stop();
-        System.out.println("Time of handle packet: " + calcTimeOfFiltration(t1,t2) + "ms");
-        System.out.println("Time of handle packet: " + watch.getLastTaskTimeMillis() + "ms");
-    }
-    public void next(byte[] packet){
-        this.packets.add(packet);
+
+   protected String applyAlgorithm(Object packet) {
+
+       String result = sequentialSearchFilterRules((HashMap<String, String>) packet);
+       return result;
     }
 
+    protected Object preparePacket(byte [] packetInByte) {
+        JPacket jPacket = new JMemoryPacket(Ethernet.ID, packetInByte);
 
-    protected void applyAlgorithm() {
-        byte[] packetInByte =  packets.remove();
-        JPacket packet = new JMemoryPacket(Ethernet.ID,packetInByte);
-        StopWatch watch2 = new StopWatch();
-        watch2.start();
-        HashMap <String,String> packetInHash =  encodePacketToHash(packet);
-        watch2.stop();
-        StopWatch watch = new StopWatch();
-        watch.start();
-        String result = sequentialSearchFilterRules(packetInHash, filterRules);
-        watch.stop();
-        System.out.println("==============Packet " + count + "==============");
-        Iterator it = packetInHash.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            System.out.println(pairs.getKey() + " = " + pairs.getValue());
-            it.remove();
-        }
-        System.out.println("Application rule: " + result);
-        System.out.println("==================================");
-        count++;
-        System.out.println("Time of sequentialSearchFilterRules: " + watch.getLastTaskTimeMillis() + "ms");
-        System.out.println("Time of encodePacketToHash : " + watch2.getLastTaskTimeMillis() + "ms");
+        HashMap <String,String> packetInHash =  encodePacketToHash(jPacket);
+
+        return  packetInHash;
     }
 
 
@@ -76,20 +49,19 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
      *
      * @param packetInHash - пакет в формате хэш таблицы (для перевода пакета из формата Jpacket в хэш таблицу используется
      * метод SimpleAlgorithm.encodePacketToHash(JPacket packet)
-     * @param filterRules - правила фильтрации, заданные в формате массива, где каждый элемент - массив объектов типа Rule, т.е.
-     * правил. Данные массивы отличаются тем, что правила в них одного определенного типа (mac, arp или ip)
+
      *
      * @return строка в формате type:num, где type - целое число, соотв. типу правила (mac - 0, arp- 1, ip -2), num - номер правила
      */
 
-    private static String sequentialSearchFilterRules(HashMap<String, String> packetInHash, ArrayList<ArrayList<Rule>> filterRules) {
+    private static String sequentialSearchFilterRules(HashMap<String, String> packetInHash) {
         boolean ruleIsMatch = false;
-        for(int i=0; i< filterRules.size();i++){
-            if(filterRules.get(i).isEmpty()){ //если в таблице нет правил, идем дальше
+        for(int i=0; i< sizeFilterRules();i++){
+            if(filterRuleOfOneTypeIsEmpty(i)){ //если в таблице нет правил, идем дальше
                 continue;
             }
-            for(int j=1;j< filterRules.get(i).size(); j++){
-                Rule nextRule = filterRules.get(i).get(j);
+            for(int j=1;j< sizeFilterRuleOfOneType(i); j++){
+                Rule nextRule = getFilterRuleSingle(i,j);
                 Iterator it = nextRule.getAllField().iterator();
                 //Начинаем поочередно сравнивать каждое поле правила с соотв. полем пакета (если оно там есть)
                 while (it.hasNext()){
@@ -136,7 +108,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
             } //если дошли до конца цикла, значит ни одно из правил не подошло, т.е. применяем глобальное
 
             //"применяем" правило только если оно на drop, pass или если это глобальное ip правило
-            if(!filterRules.get(i).get(0).get("action").equals("accept") || i==FilterRules.IP){
+            if(!getFilterRuleSingle(i,0).get("action").equals("accept") || i==FilterRules.IP){
                 return i + ":"+"0";
             }
             //т.е., если глобальное не ip правило на accept, переходим к следующей таблице правил
@@ -178,6 +150,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm implements Runnable {
      *
      * @return хэш таблица с соответствующими ключами и значениями
      */
+
     private static HashMap<String,String> encodePacketToHash(JPacket packet){
         //System.out.println(packet);
         HashMap<String,String> packetInHash = new HashMap<String, String>();

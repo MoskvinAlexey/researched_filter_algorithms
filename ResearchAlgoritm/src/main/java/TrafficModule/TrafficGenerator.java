@@ -1,16 +1,17 @@
 package TrafficModule;
 import AlgorithmModule.AbstractAlgorithm;
+import AlgorithmModule.ControlAlgorithm;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
-import org.springframework.util.StopWatch;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class TrafficGenerator implements Runnable {
 
-    public AbstractAlgorithm algorithm;
+    public ControlAlgorithm controlAlgorithm;
     public ExecutorService es;
     final StringBuilder errbuf = new StringBuilder();
     final String file;
@@ -18,9 +19,9 @@ public class TrafficGenerator implements Runnable {
     long timestamp;
     byte [] packetInByte;
 
-    public TrafficGenerator(AbstractAlgorithm algorithm, String filename){
+    public TrafficGenerator(ControlAlgorithm controlAlgorithm, String filename){
         file = filename;
-        this.algorithm = algorithm;
+        this.controlAlgorithm = controlAlgorithm;
         es = Executors.newSingleThreadExecutor();
         timestamp = 0;
     }
@@ -55,19 +56,17 @@ public class TrafficGenerator implements Runnable {
                 }
                 timestamp=tempTimestamp;
                 packetInByte = packet.getByteArray(0, packet.size());
-                algorithm.next(packetInByte);
 
-                future = es.submit(algorithm);
+                controlAlgorithm.next(packetInByte);
+                future = es.submit(controlAlgorithm);
 
             }
         };
 
         try {
-            StopWatch watch = new StopWatch();
-            watch.start();
+
             pcap.loop(10, jpacketHandler, "");
-            watch.stop();
-            System.out.println("Time of take packet from file: " + watch.getLastTaskTimeMillis() + "ms");
+
         } finally {
 
             pcap.close();
