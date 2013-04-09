@@ -6,21 +6,19 @@ import AlgorithmModule.AbstractAlgorithm;
 import AlgorithmModule.ControlAlgorithm;
 import AlgorithmModule.SimpleAlgorithm;
 import FilterRuleModule.FilterRules;
-import StatisticsModule.StatisticsHandle;
+import StatisticsModule.WrapInProxy;
 import TrafficModule.TrafficGenerator;
-import org.springframework.aop.framework.ProxyFactory;
+
 
 public class MainClass {
     public static void main(String[] args){
 
-        new FilterRules("data/rules");
+        FilterRules filterRules=WrapInProxy.wrapFilterRulesInpRoxy(new FilterRules());
+        filterRules.loadFilterRules("data/rules");
 
-        AbstractAlgorithm target = new SimpleAlgorithm();
 
-        ProxyFactory pf = new ProxyFactory();
-        pf.addAdvice(new StatisticsHandle());
-        pf.setTarget(target);
-        AbstractAlgorithm simpleAlg = (AbstractAlgorithm) pf.getProxy();
+        AbstractAlgorithm simpleAlg = WrapInProxy.wrapAlgorithmInProxy(new SimpleAlgorithm());
+        simpleAlg.setFilterRules(filterRules);
 
         ControlAlgorithm algUnderControl = new ControlAlgorithm();
         algUnderControl.setAlgorithm(simpleAlg);

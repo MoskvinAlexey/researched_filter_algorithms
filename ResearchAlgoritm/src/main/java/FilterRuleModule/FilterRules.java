@@ -25,7 +25,9 @@ public class FilterRules {
                                                  "arp_opcode"};
     public static String [] macRuleAttributes = {"number","action", "mac_source", "mac_dest"};
 
-    public FilterRules(String fileName){
+
+
+    public void loadFilterRules(String fileName){
         fileWithFilterRules = new File(fileName);
         if(!fileWithFilterRules.exists()) {
             System.out.println("File " + fileName + " is not exist!");
@@ -37,7 +39,6 @@ public class FilterRules {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static ArrayList<ArrayList<Rule>> getFilterRules(){
@@ -130,5 +131,28 @@ public class FilterRules {
 
         }
 
+    }
+
+    /**
+     *
+     * @param ruleType - тип правил фильтрации: IP =2, ARP=1, MAC=0
+     * @param ruleNumber
+     * @return правило фильтрации из таблицы ruleType, с номером в таблице ruleNumber
+     */
+
+    public  Rule getFilterRuleSingle(int ruleType, int ruleNumber){
+        return filterRules.get(ruleType).get(ruleNumber);
+    }
+
+    public  int sizeFilterRules(){
+        return filterRules.size();
+    }
+
+    public  int sizeFilterRuleOfOneType(int ruleType){
+        return filterRules.get(ruleType).size();
+    }
+
+    public  boolean filterRuleOfOneTypeIsEmpty(int ruleType){
+        return filterRules.get(ruleType).isEmpty();
     }
 }

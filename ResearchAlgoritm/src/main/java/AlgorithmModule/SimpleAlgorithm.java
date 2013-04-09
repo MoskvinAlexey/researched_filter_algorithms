@@ -21,7 +21,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm {
 
 
 
-   protected String applyAlgorithm(Object packet) {
+    protected String applyAlgorithm(Object packet) {
 
        String result = sequentialSearchFilterRules((HashMap<String, String>) packet);
        return result;
@@ -54,14 +54,14 @@ public class SimpleAlgorithm extends AbstractAlgorithm {
      * @return строка в формате type:num, где type - целое число, соотв. типу правила (mac - 0, arp- 1, ip -2), num - номер правила
      */
 
-    private static String sequentialSearchFilterRules(HashMap<String, String> packetInHash) {
+    private String sequentialSearchFilterRules(HashMap<String, String> packetInHash) {
         boolean ruleIsMatch = false;
-        for(int i=0; i< sizeFilterRules();i++){
-            if(filterRuleOfOneTypeIsEmpty(i)){ //если в таблице нет правил, идем дальше
+        for(int i=0; i< filterRules.sizeFilterRules();i++){
+            if(filterRules.filterRuleOfOneTypeIsEmpty(i)){ //если в таблице нет правил, идем дальше
                 continue;
             }
-            for(int j=1;j< sizeFilterRuleOfOneType(i); j++){
-                Rule nextRule = getFilterRuleSingle(i,j);
+            for(int j=1;j< filterRules.sizeFilterRuleOfOneType(i); j++){
+                Rule nextRule = filterRules.getFilterRuleSingle(i,j);
                 Iterator it = nextRule.getAllField().iterator();
                 //Начинаем поочередно сравнивать каждое поле правила с соотв. полем пакета (если оно там есть)
                 while (it.hasNext()){
@@ -108,7 +108,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm {
             } //если дошли до конца цикла, значит ни одно из правил не подошло, т.е. применяем глобальное
 
             //"применяем" правило только если оно на drop, pass или если это глобальное ip правило
-            if(!getFilterRuleSingle(i,0).get("action").equals("accept") || i==FilterRules.IP){
+            if(!filterRules.getFilterRuleSingle(i,0).get("action").equals("accept") || i==FilterRules.IP){
                 return i + ":"+"0";
             }
             //т.е., если глобальное не ip правило на accept, переходим к следующей таблице правил
