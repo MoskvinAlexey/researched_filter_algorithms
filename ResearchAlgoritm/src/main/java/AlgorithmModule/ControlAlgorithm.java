@@ -13,7 +13,7 @@ public class ControlAlgorithm implements Runnable {
     public void run() {
         byte[] packetInByte =  packets.remove();
         Object packet = algorithm.preparePacket(packetInByte);
-        String result = algorithm.applyAlgorithm(packet);
+        String result = algorithm.apply(packet);
         System.out.println("To packet № " + count + " apply rule " + result);
         count++;
     }

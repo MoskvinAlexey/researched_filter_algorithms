@@ -75,6 +75,7 @@ public class TrafficGenerator implements Runnable {
         while(!future.isDone()){
            //wait when last packet will handle
         }
+
         es.shutdown();
     }
 

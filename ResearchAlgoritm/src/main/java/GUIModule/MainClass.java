@@ -23,7 +23,7 @@ public class MainClass {
         ControlAlgorithm algUnderControl = new ControlAlgorithm();
         algUnderControl.setAlgorithm(simpleAlg);
 
-        Thread th = new Thread(new TrafficGenerator(algUnderControl, "data/example2"));
+        Thread th = new Thread(new TrafficGenerator(algUnderControl, "data/example"));
         th.start();
         try {
             th.join();

@@ -18,7 +18,11 @@ public abstract class AbstractAlgorithm {
         this.filterRules = filterRules;
     }
 
-
+    protected String apply(Object packet) {
+        String retVal = applyAlgorithm(packet);
+        //TODO обнулить совет и получить из него значение
+        return retVal;
+    }
 
     protected abstract String applyAlgorithm(Object packet);
 
