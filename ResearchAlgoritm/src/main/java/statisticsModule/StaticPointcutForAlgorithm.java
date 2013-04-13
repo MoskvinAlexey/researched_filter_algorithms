@@ -1,13 +1,13 @@
-package StatisticsModule;
+package statisticsModule;
 
 
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 
 import java.lang.reflect.Method;
 
-public class StaticPointcutForFilterRules extends StaticMethodMatcherPointcut {
+public class StaticPointcutForAlgorithm extends StaticMethodMatcherPointcut {
 
     public boolean matches(Method method, Class<?> aClass) {
-        return "getFilterRuleSingle".equals(method.getName());
+        return "applyAlgorithm".equals(method.getName());
     }
 }

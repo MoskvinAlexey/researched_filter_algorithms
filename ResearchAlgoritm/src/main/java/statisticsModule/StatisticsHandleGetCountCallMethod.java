@@ -1,4 +1,4 @@
-package StatisticsModule;
+package statisticsModule;
 
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -7,17 +7,20 @@ import org.aopalliance.intercept.MethodInvocation;
 
 public class StatisticsHandleGetCountCallMethod implements MethodInterceptor {
 
-    int countMethodCall = 0;
+    static int countMethodCall = 0;
 
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 
-        System.out.println(countMethodCall++);
+        countMethodCall++;
         Object retVal = methodInvocation.proceed();
-
-
-
-
-
         return retVal;
+    }
+
+    static int getCountMethodCall(){
+        return countMethodCall;
+    }
+
+    static void resetCountMethodCall(){
+        countMethodCall = 0;
     }
 }

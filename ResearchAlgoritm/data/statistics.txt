@@ -1,0 +1,21 @@
+prepare: 86 ms
+Used rules for packet: 6 rules
+prepare: 2 ms
+Used rules for packet: 14 rules
+prepare: 4 ms
+Used rules for packet: 6 rules
+prepare: 3 ms
+Used rules for packet: 14 rules
+prepare: 28 ms
+Used rules for packet: 14 rules
+prepare: 9 ms
+Used rules for packet: 14 rules
+prepare: 3 ms
+Used rules for packet: 6 rules
+prepare: 2 ms
+Used rules for packet: 14 rules
+prepare: 3 ms
+Used rules for packet: 6 rules
+prepare: 2 ms
+applyAlgorithm for 10 packet: 0.4 ms
+Used rules for packet: 14 rules

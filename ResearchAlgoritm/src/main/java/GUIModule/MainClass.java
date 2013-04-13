@@ -2,12 +2,12 @@ package GUIModule;
 
 
 
-import AlgorithmModule.AbstractAlgorithm;
-import AlgorithmModule.ControlAlgorithm;
-import AlgorithmModule.SimpleAlgorithm;
-import FilterRuleModule.FilterRules;
-import StatisticsModule.WrapInProxy;
-import TrafficModule.TrafficGenerator;
+import algorithmModule.AbstractAlgorithm;
+import algorithmModule.ControlAlgorithm;
+import algorithmModule.SimpleAlgorithm;
+import filterRuleModule.FilterRules;
+import statisticsModule.WrapInProxy;
+import trafficModule.TrafficGenerator;
 
 
 public class MainClass {

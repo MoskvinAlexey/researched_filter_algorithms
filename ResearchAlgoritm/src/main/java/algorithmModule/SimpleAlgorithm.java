@@ -1,7 +1,7 @@
-package AlgorithmModule;
+package algorithmModule;
 
-import FilterRuleModule.FilterRules;
-import FilterRuleModule.Rule;
+import filterRuleModule.FilterRules;
+import filterRuleModule.Rule;
 import org.jnetpcap.packet.JMemoryPacket;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.format.FormatUtils;
@@ -12,7 +12,6 @@ import org.jnetpcap.protocol.network.Icmp;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
-import org.springframework.util.StopWatch;
 
 import java.util.*;
 
@@ -27,7 +26,7 @@ public class SimpleAlgorithm extends AbstractAlgorithm {
        return result;
     }
 
-    protected Object preparePacket(byte [] packetInByte) {
+    protected Object prepare(byte[] packetInByte) {
         JPacket jPacket = new JMemoryPacket(Ethernet.ID, packetInByte);
 
         HashMap <String,String> packetInHash =  encodePacketToHash(jPacket);

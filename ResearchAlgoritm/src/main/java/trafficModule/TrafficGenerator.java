@@ -1,9 +1,10 @@
-package TrafficModule;
-import AlgorithmModule.AbstractAlgorithm;
-import AlgorithmModule.ControlAlgorithm;
+package trafficModule;
+import algorithmModule.ControlAlgorithm;
+import com.sun.xml.internal.ws.api.streaming.XMLStreamWriterFactory;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
+import support.Writer;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,12 +19,17 @@ public class TrafficGenerator implements Runnable {
     public Future future;
     long timestamp;
     byte [] packetInByte;
+    int countOfPacket;
+    Writer writer;
 
     public TrafficGenerator(ControlAlgorithm controlAlgorithm, String filename){
         file = filename;
         this.controlAlgorithm = controlAlgorithm;
         es = Executors.newSingleThreadExecutor();
         timestamp = 0;
+        countOfPacket=0;
+        writer = new Writer("data/results.txt");
+
     }
 
 
@@ -45,7 +51,7 @@ public class TrafficGenerator implements Runnable {
         PcapPacketHandler<String> jpacketHandler = new PcapPacketHandler<String>() {
 
             public void nextPacket(PcapPacket packet, String user) {
-
+                countOfPacket++;
                 long tempTimestamp=packet.getCaptureHeader().timestampInMillis();
                 if(timestamp!=0){
                     try {
@@ -65,7 +71,7 @@ public class TrafficGenerator implements Runnable {
 
         try {
 
-            pcap.loop(50, jpacketHandler, "");
+            pcap.loop(10, jpacketHandler, "");
 
         } finally {
 
@@ -76,7 +82,9 @@ public class TrafficGenerator implements Runnable {
            //wait when last packet will handle
         }
 
+
         es.shutdown();
+        writer.write("Filtered packets: " + countOfPacket);
     }
 
 }

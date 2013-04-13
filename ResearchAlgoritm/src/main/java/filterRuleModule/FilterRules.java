@@ -1,10 +1,11 @@
-package FilterRuleModule;
+package filterRuleModule;
 
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import support.Writer;
 
 
 public class FilterRules {
@@ -24,6 +25,8 @@ public class FilterRules {
     public static String [] arpRuleAttributes = {"number","action","mac_source","ip_sorce","mac_dest","ip_dest",
                                                  "arp_opcode"};
     public static String [] macRuleAttributes = {"number","action", "mac_source", "mac_dest"};
+
+    static Writer writer = new Writer("data/results.txt");
 
 
 
@@ -46,13 +49,17 @@ public class FilterRules {
     }
 
     public static void loadFilterRulesFromFile(File file) throws IOException {
+        int countOfLine = 0;
         BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()));
         String nextLine;
         while((nextLine = br.readLine())!=null){
-            parseCurrentRule(nextLine);
+            if(!nextLine.equals("")){
+                countOfLine++;
+                parseCurrentRule(nextLine);
+            }
         }
         br.close();
-
+        writer.write("Load rules: " + countOfLine);
         Collections.sort(macFilterRules);
         filterRules.add(MAC,macFilterRules);
         Collections.sort(arpFilterRules);

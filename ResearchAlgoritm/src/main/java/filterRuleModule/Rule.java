@@ -1,4 +1,4 @@
-package FilterRuleModule;
+package filterRuleModule;
 
 import java.util.HashMap;
 
