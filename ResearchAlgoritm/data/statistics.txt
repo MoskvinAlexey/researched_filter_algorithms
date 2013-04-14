@@ -1,21 +1,42 @@
-prepare: 86 ms
+prepare: 94 ms
+Used rules for packet: 6 rules
+prepare: 5 ms
+Used rules for packet: 14 rules
+prepare: 4 ms
 Used rules for packet: 6 rules
 prepare: 2 ms
+Used rules for packet: 14 rules
+prepare: 26 ms
+Used rules for packet: 14 rules
+prepare: 8 ms
 Used rules for packet: 14 rules
 prepare: 4 ms
 Used rules for packet: 6 rules
 prepare: 3 ms
 Used rules for packet: 14 rules
-prepare: 28 ms
+prepare: 3 ms
+Used rules for packet: 6 rules
+prepare: 3 ms
+applyAlgorithm for 10 packet: 0.6 ms
 Used rules for packet: 14 rules
-prepare: 9 ms
+prepare: 68 ms
+Used rules for packet: 14 rules
+prepare: 4 ms
+Used rules for packet: 14 rules
+prepare: 14 ms
+Used rules for packet: 6 rules
+prepare: 3 ms
+Used rules for packet: 6 rules
+prepare: 3 ms
+Used rules for packet: 14 rules
+prepare: 27 ms
+Used rules for packet: 14 rules
+prepare: 7 ms
 Used rules for packet: 14 rules
 prepare: 3 ms
 Used rules for packet: 6 rules
-prepare: 2 ms
-Used rules for packet: 14 rules
-prepare: 3 ms
+prepare: 7 ms
 Used rules for packet: 6 rules
-prepare: 2 ms
-applyAlgorithm for 10 packet: 0.4 ms
+prepare: 3 ms
+applyAlgorithm for 10 packet: 0.6 ms
 Used rules for packet: 14 rules
