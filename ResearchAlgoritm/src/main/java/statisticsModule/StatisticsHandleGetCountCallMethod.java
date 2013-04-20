@@ -12,6 +12,9 @@ public class StatisticsHandleGetCountCallMethod implements MethodBeforeAdvice {
 
     static int countMethodCall = 0;
 
+    /**
+     * Совет "До". Измеряет количество вызовов метода. Используется для подсчета количества примененных к пакету правил
+     */
     public void before(Method method, Object[] objects, Object o) throws Throwable {
         countMethodCall++;
     }

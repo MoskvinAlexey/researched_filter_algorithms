@@ -1,11 +1,9 @@
 package trafficModule;
 import algorithmModule.ControlAlgorithm;
-import com.sun.xml.internal.ws.api.streaming.XMLStreamWriterFactory;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import support.Writer;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -71,7 +69,7 @@ public class TrafficGenerator implements Runnable {
 
         try {
 
-            pcap.loop(10, jpacketHandler, "");
+            pcap.loop(-1, jpacketHandler, "");
 
         } finally {
 

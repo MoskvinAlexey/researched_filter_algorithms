@@ -16,6 +16,11 @@ public class StatisticsHandleGetAverageMethodTime implements MethodInterceptor {
         writer = new Writer("data/statistics.txt");
     }
 
+    /**
+     * Совет "вместо". Измеряет время работы алгоритма в среднем за 10 вызовов. Также фиксирует количество обращений к
+     * правилам фильтрации после каждого вызова
+     * *
+     */
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 
 

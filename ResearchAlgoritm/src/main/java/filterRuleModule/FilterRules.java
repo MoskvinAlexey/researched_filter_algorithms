@@ -34,7 +34,7 @@ public class FilterRules {
         fileWithFilterRules = new File(fileName);
         if(!fileWithFilterRules.exists()) {
             System.out.println("File " + fileName + " is not exist!");
-            System.exit(1);           //add cath Exception
+            System.exit(1);
         }
 
         try {
@@ -42,10 +42,6 @@ public class FilterRules {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static ArrayList<ArrayList<Rule>> getFilterRules(){
-        return filterRules;
     }
 
     public static void loadFilterRulesFromFile(File file) throws IOException {

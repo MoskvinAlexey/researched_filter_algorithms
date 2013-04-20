@@ -18,7 +18,9 @@ public class StatisticsHandleGetMethodTime implements MethodInterceptor {
     }
 
 
-
+    /**
+     * Совет "Вместо". Измеряет время работы метода. Используется для измерения времени подготовки алгоритма.
+     */
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         StopWatch watch = new StopWatch();
         watch.start(methodInvocation.getMethod().getName());
