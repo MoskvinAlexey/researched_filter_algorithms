@@ -7,6 +7,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import filterRuleModule.FilterRules;
+import statisticsModule.CollectStatistics;
 import statisticsModule.WrapInProxy;
 import trafficModule.TrafficGenerator;
 
@@ -17,13 +18,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
+import java.util.Set;
 
 
 public class GUI extends JFrame {
 
+    private int runNumber;
+
     public GUI(){
         super("ResearchAlgorithm");
+        runNumber = 0;
+        initialize();
 
+    }
+
+    private void initialize(){
         FormLayout layout = new FormLayout(
                 "left:pref,10dlu, 80dlu, 10dlu, 60dlu, 150dlu",
                 "5dlu,p, 3dlu, p, 10dlu, 30dlu, 30dlu, 3dlu, p, 10dlu, p, 10dlu, p, 10dlu, p, 10dlu,p,90dlu");
@@ -70,7 +80,7 @@ public class GUI extends JFrame {
 
 
         JButton startButton = new JButton("Запустить");
-        startButton.addActionListener(new ActionStartButton(algorithmLabel,trafficField,ruleField));
+        startButton.addActionListener(new ActionStartButton(algorithmLabel,trafficField,ruleField, table));
         startButton.setPreferredSize(new Dimension(200,30));
 
         builder.add(startButton, cc.xyw(1,13,3,CellConstraints.CENTER,CellConstraints.BOTTOM));
@@ -101,7 +111,6 @@ public class GUI extends JFrame {
                 System.exit(0);
             }
         } );
-
     }
 
     private void addActionForBrowserButton(JButton button, final JTextField textField) {
@@ -151,18 +160,21 @@ public class GUI extends JFrame {
         JLabel algorithmLabel;
         JTextField trafficField;
         JTextField ruleField;
+        JTable table;
 
-        public ActionStartButton(JLabel algorithmLabel, JTextField trafficField, JTextField ruleField) {
+        public ActionStartButton(JLabel algorithmLabel, JTextField trafficField, JTextField ruleField, JTable table) {
             this.algorithmLabel = algorithmLabel;
             this.trafficField = trafficField;
             this.ruleField = ruleField;
+            this.table = table;
         }
 
-        @Override
+
         public void actionPerformed(ActionEvent e) {
             //TODO: Добавить валидацию полей с путями до файлов: 1.поля пустые 2.файлы пустые 3.файлы не того формата
 
             setEnabled(false);
+            CollectStatistics.setAlgorithmName(algorithmLabel.getText());
             FilterRules filterRules= WrapInProxy.wrapFilterRulesInpRoxy(new FilterRules());
             filterRules.loadFilterRules(ruleField.getText());
 
@@ -181,8 +193,29 @@ public class GUI extends JFrame {
                 ex.printStackTrace();
             }
             System.out.println("Done!");
-
+            updateTableInformation(CollectStatistics.getSummaryStatistics(), table,runNumber);
+            runNumber++;
             setEnabled(true);
         }
     }
+
+    private void updateTableInformation(HashMap<String, Object> summaryStatistics, JTable table,int runNumber) {
+        Set<String> keys = summaryStatistics.keySet();
+        for(String key : keys){
+            int index = findColumnIndex(key, table);
+            if(index!=-1){
+                table.setValueAt(summaryStatistics.get(key),runNumber,index);
+            }
+        }
+    }
+
+    private int findColumnIndex(String key, JTable table) {
+        for(int i =0;i<table.getColumnCount();i++){
+           if(table.getColumnName(i).equals(key)){
+               return i;
+           }
+        }
+        return -1;
+    }
+
 }

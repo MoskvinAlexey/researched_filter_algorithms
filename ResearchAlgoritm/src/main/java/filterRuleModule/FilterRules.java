@@ -5,7 +5,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import support.Writer;
+
+import statisticsModule.CollectStatistics;
+
 
 
 public class FilterRules {
@@ -26,7 +28,7 @@ public class FilterRules {
                                                  "arp_opcode"};
     public static String [] macRuleAttributes = {"number","action", "mac_source", "mac_dest"};
 
-    static Writer writer = new Writer("data/results.txt");
+
 
 
 
@@ -55,7 +57,8 @@ public class FilterRules {
             }
         }
         br.close();
-        writer.write("Load rules: " + countOfLine);
+
+        CollectStatistics.setNumberRules(countOfLine);
         Collections.sort(macFilterRules);
         filterRules.add(MAC,macFilterRules);
         Collections.sort(arpFilterRules);

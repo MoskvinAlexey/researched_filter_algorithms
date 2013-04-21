@@ -3,7 +3,7 @@ import algorithmModule.ControlAlgorithm;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
-import support.Writer;
+import statisticsModule.CollectStatistics;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -18,7 +18,6 @@ public class TrafficGenerator implements Runnable {
     long timestamp;
     byte [] packetInByte;
     int countOfPacket;
-    Writer writer;
 
     public TrafficGenerator(ControlAlgorithm controlAlgorithm, String filename){
         file = filename;
@@ -26,7 +25,7 @@ public class TrafficGenerator implements Runnable {
         es = Executors.newSingleThreadExecutor();
         timestamp = 0;
         countOfPacket=0;
-        writer = new Writer("data/results.txt");
+
 
     }
 
@@ -82,7 +81,7 @@ public class TrafficGenerator implements Runnable {
 
 
         es.shutdown();
-        writer.write("Filtered packets: " + countOfPacket);
+        CollectStatistics.setNumberOfPackets(countOfPacket);
     }
 
 }
