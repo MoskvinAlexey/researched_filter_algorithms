@@ -26,6 +26,4 @@ public class StatisticsHandleGetCountCallMethod implements MethodBeforeAdvice {
         countMethodCall = 0;
     }
 
-
-
 }

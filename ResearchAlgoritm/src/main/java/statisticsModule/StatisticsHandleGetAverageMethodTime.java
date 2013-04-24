@@ -38,7 +38,6 @@ public class StatisticsHandleGetAverageMethodTime implements MethodInterceptor {
         CollectStatistics.addNumberOfRulesApplyToOnePacket(StatisticsHandleGetCountCallMethod.getCountMethodCall());
         System.out.println("Used rules for packet: " + StatisticsHandleGetCountCallMethod.getCountMethodCall() + " rules");
         StatisticsHandleGetCountCallMethod.resetCountMethodCall();
-
         return retVal;
     }
 

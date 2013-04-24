@@ -47,16 +47,68 @@ public class CollectStatistics {
         summary.put("Алгоритм",algorithName);
         summary.put("Всего пакетов",numberOfPackets);
         summary.put("Правил фильтрации", numberRules);
-        double fullRunningTime =0;
-        for(Double time : runningTime){
-             fullRunningTime+=time;
-        }
-        summary.put("Время работы",fullRunningTime);
+
+        summary.put("Время работы",calculateTotalRunningTime(runningTime));
         return summary;
     }
 
     public static HashMap<String,Object> getFullStatistics(){
-        return null;
+        HashMap<String,Object> full = new HashMap<String, Object>();
+        full.put("Алгоритм",algorithName);
+        full.put("Всего пакетов",numberOfPackets);
+        full.put("Правил фильтрации", numberRules);
+        full.put("Время применения алгоритма для 10ти пакетов", cloneRunningTime());
+        full.put("Общее время выполнения алгоритма",calculateTotalRunningTime(runningTime));
+        full.put("Время подготовки для 10 пакетов",calculatePreparationTime());
+        full.put("Общее время подготовки алгоритма",calculateTotalRunningTime(preparationTime));
+        full.put("Применено правил к пакету (в среднем)", calcEverageNumbreOfRules());
+        return full;
+    }
+
+    private static ArrayList<Double> cloneRunningTime() {
+        ArrayList<Double> newRunningTime = new ArrayList<Double>();
+        for(int i=0;i<runningTime.size();i++){
+            newRunningTime.add(runningTime.get(i));
+        }
+        return newRunningTime;
+    }
+
+    private static int calcEverageNumbreOfRules() {
+        int sum = 0;
+        for (int i=0;i<numberOfRulesApplyToOnePacket.size();i++){
+           sum+=numberOfRulesApplyToOnePacket.get(i);
+        }
+        return sum/numberOfPackets;
+    }
+
+    private static ArrayList<Double> calculatePreparationTime() {
+        ArrayList<Double> preparationTimeForTenPackets = new ArrayList<Double>();
+        for(int i=0;i<preparationTime.size()/10;i++){
+            double time=0;
+            for(int j=0;j<10;j++){
+                time+=preparationTime.get(i*10 + j);
+            }
+            preparationTimeForTenPackets.add(time);
+        }
+
+        return preparationTimeForTenPackets;
+    }
+
+    public static void resetAll(){
+        algorithName ="";
+        runningTime.clear();
+        preparationTime.clear();
+        numberOfRulesApplyToOnePacket.clear();
+        numberOfPackets=0;
+        numberRules=0;
+    }
+
+    private static double calculateTotalRunningTime(List<Double> times){
+        double fullRunningTime =0;
+        for(Double time : times){
+            fullRunningTime+=time;
+        }
+        return fullRunningTime;
     }
 
 

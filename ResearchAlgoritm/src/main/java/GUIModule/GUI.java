@@ -18,25 +18,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 
 public class GUI extends JFrame {
 
+    private final int MAX_RUN_NUMBER = 20;
     private int runNumber;
+    ArrayList<HashMap<String,Object>> previousStart;
 
     public GUI(){
-        super("ResearchAlgorithm");
+        super("Исследование алгоритмов классификации пакетного трафика");
         runNumber = 0;
+        previousStart = new ArrayList<HashMap<String,Object>>();
         initialize();
 
     }
 
     private void initialize(){
         FormLayout layout = new FormLayout(
-                "left:pref,10dlu, 80dlu, 10dlu, 60dlu, 150dlu",
-                "5dlu,p, 3dlu, p, 10dlu, 30dlu, 30dlu, 3dlu, p, 10dlu, p, 10dlu, p, 10dlu, p, 10dlu,p,90dlu");
+                "left:pref,10dlu, 80dlu, 10dlu, 60dlu, 200dlu",
+                "5dlu,p, 3dlu, p, 10dlu, 30dlu, 30dlu, 3dlu, p, 10dlu, p, 10dlu, p, 10dlu, p, 10dlu,p,120dlu");
 
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();
@@ -74,7 +78,7 @@ public class GUI extends JFrame {
 
         builder.addSeparator("Последние запуски", cc.xyw(5,11,2));
 
-        JTable table = createTable();
+        JTable table = createSummaryTable();
         JScrollPane scrollPane = new JScrollPane(table);
         builder.add(scrollPane,cc.xywh(5, 13, 2, 6));
 
@@ -91,6 +95,7 @@ public class GUI extends JFrame {
         builder.add(reportButton, cc.xyw(1,15,3,CellConstraints.CENTER,CellConstraints.BOTTOM));
 
         JButton compareButton = new JButton("Сравнить результаты");
+        compareButton.addActionListener(new ActionCompareButton(table, previousStart));
         compareButton.setPreferredSize(new Dimension(200,30));
 
         builder.add(compareButton, cc.xyw(1,17,3,CellConstraints.CENTER,CellConstraints.BOTTOM));
@@ -132,14 +137,14 @@ public class GUI extends JFrame {
 
     }
 
-    private JTable createTable() {
+    private JTable createSummaryTable() {
         String[] columnNames = {
                 "Алгоритм",
                 "Правил фильтрации",
                 "Всего пакетов",
                 "Время работы"
         };
-        int numRows = 20;
+        int numRows = MAX_RUN_NUMBER;
         DefaultTableModel model = new DefaultTableModel(numRows, columnNames.length){
             public boolean isCellEditable(int row, int column) {
                 //all cells false
@@ -151,9 +156,7 @@ public class GUI extends JFrame {
         return table;
     }
 
-    public static void main(String[] args){
-        new GUI();
-    }
+
 
 
     private class ActionStartButton implements ActionListener {
@@ -193,8 +196,10 @@ public class GUI extends JFrame {
                 ex.printStackTrace();
             }
             System.out.println("Done!");
-            updateTableInformation(CollectStatistics.getSummaryStatistics(), table,runNumber);
+            updateTableInformation(CollectStatistics.getSummaryStatistics(), table, runNumber);
             runNumber++;
+            previousStart.add(CollectStatistics.getFullStatistics());
+            CollectStatistics.resetAll();
             setEnabled(true);
         }
     }
@@ -217,5 +222,33 @@ public class GUI extends JFrame {
         }
         return -1;
     }
+
+    public static void main(String[] args){
+//        try {
+//            UIManager.setLookAndFeel(
+//                    UIManager.getCrossPlatformLookAndFeelClassName());
+//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (UnsupportedLookAndFeelException e) {
+//            e.printStackTrace();
+//        }
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            // If Nimbus is not available, you can set the GUI to another look and feel.
+        }
+        new GUI();
+    }
+
 
 }
