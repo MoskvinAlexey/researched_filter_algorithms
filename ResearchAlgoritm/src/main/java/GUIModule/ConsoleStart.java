@@ -10,7 +10,7 @@ import statisticsModule.WrapInProxy;
 import trafficModule.TrafficGenerator;
 
 
-public class MainClass {
+public class ConsoleStart {
     public static void main(String[] args){
 
         FilterRules filterRules=WrapInProxy.wrapFilterRulesInpRoxy(new FilterRules());

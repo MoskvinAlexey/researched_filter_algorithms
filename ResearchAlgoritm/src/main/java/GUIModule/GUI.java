@@ -1,38 +1,23 @@
 package GUIModule;
 
-import algorithmModule.AbstractAlgorithm;
-import algorithmModule.ControlAlgorithm;
-import algorithmModule.SimpleAlgorithm;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import filterRuleModule.FilterRules;
-import statisticsModule.CollectStatistics;
-import statisticsModule.WrapInProxy;
-import trafficModule.TrafficGenerator;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
 
 
 public class GUI extends JFrame {
 
     private final int MAX_RUN_NUMBER = 20;
-    private int runNumber;
-    ArrayList<HashMap<String,Object>> previousStart;
+
 
     public GUI(){
         super("Исследование алгоритмов классификации пакетного трафика");
-        runNumber = 0;
-        previousStart = new ArrayList<HashMap<String,Object>>();
         initialize();
 
     }
@@ -40,7 +25,7 @@ public class GUI extends JFrame {
     private void initialize(){
         FormLayout layout = new FormLayout(
                 "left:pref,10dlu, 80dlu, 10dlu, 60dlu, 200dlu",
-                "5dlu,p, 3dlu, p, 10dlu, 30dlu, 30dlu, 3dlu, p, 10dlu, p, 10dlu, p, 10dlu, p, 10dlu,p,120dlu");
+                "5dlu,p, 3dlu, p, 10dlu, 30dlu, 30dlu, 3dlu, p, 10dlu, p, 10dlu, p, 10dlu, p, 10dlu,p,110dlu");
 
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();
@@ -84,21 +69,24 @@ public class GUI extends JFrame {
 
 
         JButton startButton = new JButton("Запустить");
-        startButton.addActionListener(new ActionStartButton(algorithmLabel,trafficField,ruleField, table));
+        ActionStartButton startButtonAction = new ActionStartButton(algorithmLabel,trafficField,ruleField,
+                                                                    table, this);
+        startButton.addActionListener(startButtonAction);
         startButton.setPreferredSize(new Dimension(200,30));
 
         builder.add(startButton, cc.xyw(1,13,3,CellConstraints.CENTER,CellConstraints.BOTTOM));
 
-        JButton reportButton = new JButton("Подробный отчет");
-        reportButton.setPreferredSize(new Dimension(200,30));
+        JButton fullReportButton = new JButton("Подробный отчет");
+        fullReportButton.addActionListener(new ActionFullReportButton(table, startButtonAction.getPreviousStart()));
+        fullReportButton.setPreferredSize(new Dimension(200, 30));
 
-        builder.add(reportButton, cc.xyw(1,15,3,CellConstraints.CENTER,CellConstraints.BOTTOM));
+        builder.add(fullReportButton, cc.xyw(1, 15, 3, CellConstraints.CENTER, CellConstraints.BOTTOM));
 
-        JButton compareButton = new JButton("Сравнить результаты");
-        compareButton.addActionListener(new ActionCompareButton(table, previousStart));
-        compareButton.setPreferredSize(new Dimension(200,30));
+        JButton compareFullReportButton = new JButton("Сравнить результаты");
+        compareFullReportButton.addActionListener(new ActionCompareFullReportButton(table, startButtonAction.getPreviousStart()));
+        compareFullReportButton.setPreferredSize(new Dimension(200, 30));
 
-        builder.add(compareButton, cc.xyw(1,17,3,CellConstraints.CENTER,CellConstraints.BOTTOM));
+        builder.add(compareFullReportButton, cc.xyw(1,17,3,CellConstraints.CENTER,CellConstraints.BOTTOM));
 
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -106,16 +94,10 @@ public class GUI extends JFrame {
         mainPanel.add(builder.getPanel(),BorderLayout.SOUTH);
         setContentPane(mainPanel);
         pack();
-        setVisible(true);
         setResizable(false);
-
-
-
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        } );
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     private void addActionForBrowserButton(JButton button, final JTextField textField) {
@@ -133,10 +115,7 @@ public class GUI extends JFrame {
                 }
             }
         });
-
-
     }
-
     private JTable createSummaryTable() {
         String[] columnNames = {
                 "Алгоритм",
@@ -147,7 +126,6 @@ public class GUI extends JFrame {
         int numRows = MAX_RUN_NUMBER;
         DefaultTableModel model = new DefaultTableModel(numRows, columnNames.length){
             public boolean isCellEditable(int row, int column) {
-                //all cells false
                 return false;
             }
         };
@@ -156,88 +134,7 @@ public class GUI extends JFrame {
         return table;
     }
 
-
-
-
-    private class ActionStartButton implements ActionListener {
-        JLabel algorithmLabel;
-        JTextField trafficField;
-        JTextField ruleField;
-        JTable table;
-
-        public ActionStartButton(JLabel algorithmLabel, JTextField trafficField, JTextField ruleField, JTable table) {
-            this.algorithmLabel = algorithmLabel;
-            this.trafficField = trafficField;
-            this.ruleField = ruleField;
-            this.table = table;
-        }
-
-
-        public void actionPerformed(ActionEvent e) {
-            //TODO: Добавить валидацию полей с путями до файлов: 1.поля пустые 2.файлы пустые 3.файлы не того формата
-
-            setEnabled(false);
-            CollectStatistics.setAlgorithmName(algorithmLabel.getText());
-            FilterRules filterRules= WrapInProxy.wrapFilterRulesInpRoxy(new FilterRules());
-            filterRules.loadFilterRules(ruleField.getText());
-
-            // TODO:Добавить логику подключения алгоритма в зависимости от текста в algorithmLabel
-            AbstractAlgorithm simpleAlg = WrapInProxy.wrapAlgorithmInProxy(new SimpleAlgorithm());
-            simpleAlg.setFilterRules(filterRules);
-
-            ControlAlgorithm algUnderControl = new ControlAlgorithm();
-            algUnderControl.setAlgorithm(simpleAlg);
-
-            Thread th = new Thread(new TrafficGenerator(algUnderControl, trafficField.getText()));
-            th.start();
-            try {
-                th.join();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-            System.out.println("Done!");
-            updateTableInformation(CollectStatistics.getSummaryStatistics(), table, runNumber);
-            runNumber++;
-            previousStart.add(CollectStatistics.getFullStatistics());
-            CollectStatistics.resetAll();
-            FilterRules.resetFilterRules();
-            setEnabled(true);
-        }
-    }
-
-    private void updateTableInformation(HashMap<String, Object> summaryStatistics, JTable table,int runNumber) {
-        Set<String> keys = summaryStatistics.keySet();
-        for(String key : keys){
-            int index = findColumnIndex(key, table);
-            if(index!=-1){
-                table.setValueAt(summaryStatistics.get(key),runNumber,index);
-            }
-        }
-    }
-
-    private int findColumnIndex(String key, JTable table) {
-        for(int i =0;i<table.getColumnCount();i++){
-           if(table.getColumnName(i).equals(key)){
-               return i;
-           }
-        }
-        return -1;
-    }
-
     public static void main(String[] args){
-//        try {
-//            UIManager.setLookAndFeel(
-//                    UIManager.getCrossPlatformLookAndFeelClassName());
-//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (UnsupportedLookAndFeelException e) {
-//            e.printStackTrace();
-//        }
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -246,10 +143,8 @@ public class GUI extends JFrame {
                 }
             }
         } catch (Exception e) {
-            // If Nimbus is not available, you can set the GUI to another look and feel.
+
         }
         new GUI();
     }
-
-
 }

@@ -17,10 +17,10 @@ public class FilterRules {
     public static final int MAC=0;
 
     public File fileWithFilterRules;
-    public static ArrayList<ArrayList<Rule>> filterRules = new ArrayList<ArrayList<Rule>>();
-    public static ArrayList<Rule> ipFilterRules= new ArrayList<Rule>();
-    public static ArrayList<Rule> macFilterRules = new ArrayList<Rule>();
-    public static ArrayList<Rule> arpFilterRules= new ArrayList<Rule>();
+    private static ArrayList<ArrayList<Rule>> filterRules = new ArrayList<ArrayList<Rule>>();
+    private static ArrayList<Rule> ipFilterRules= new ArrayList<Rule>();
+    private static ArrayList<Rule> macFilterRules = new ArrayList<Rule>();
+    private static ArrayList<Rule> arpFilterRules= new ArrayList<Rule>();
 
     public static String [] ipRuleAttributes = {"number","action","ip_source","port_source","ip_dest","port_dest",
                                                 "protocols", "icmp_type"};
@@ -163,6 +163,9 @@ public class FilterRules {
     }
 
     public static void resetFilterRules(){
+        ipFilterRules.clear();
+        macFilterRules.clear();
+        arpFilterRules.clear();
         filterRules.clear();
     }
 }

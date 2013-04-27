@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class FullTableWindow extends JFrame {
+public class ReportTableWindow extends JFrame {
 
     JTable table;
 
-    FullTableWindow(JTable table){
+    ReportTableWindow(JTable table){
         super("Подробный отчет");
         this.table = table;
         initialize();
@@ -20,7 +20,7 @@ public class FullTableWindow extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         setContentPane(mainPanel);
-        setSize(400,400);
+        setSize(500,200);
         setVisible(true);
 
     }
