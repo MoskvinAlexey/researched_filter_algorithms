@@ -200,6 +200,7 @@ public class GUI extends JFrame {
             runNumber++;
             previousStart.add(CollectStatistics.getFullStatistics());
             CollectStatistics.resetAll();
+            FilterRules.resetFilterRules();
             setEnabled(true);
         }
     }

@@ -161,4 +161,8 @@ public class FilterRules {
     public  boolean filterRuleOfOneTypeIsEmpty(int ruleType){
         return filterRules.get(ruleType).isEmpty();
     }
+
+    public static void resetFilterRules(){
+        filterRules.clear();
+    }
 }
