@@ -5,6 +5,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import javax.swing.*;
+import javax.swing.plaf.IconUIResource;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,7 +41,20 @@ public class GUI extends JFrame {
 
 
         builder.addSeparator("Алгоритм", cc.xyw(1,2,6));
-        builder.add(new JButton("Выбрать алгоритм"), cc.xy(1,4));
+        JButton button = new JButton(new AbstractAction() {
+            {
+                putValue(AbstractAction.NAME, "Выбрать алгоритм");
+                putValue(AbstractAction.SHORT_DESCRIPTION, "Выбрать алгоритм фильтрации");
+                //putValue(AbstractAction.SMALL_ICON, new IconUIResource());
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showInputDialog(GUI.this, new String[] {"1", "2"});
+            }
+        });
+
+        builder.add(button, cc.xy(1,4));
         JLabel algorithmLabel = new JLabel("Последовательный поиск");
         builder.add(algorithmLabel, cc.xyw(3, 4, 3));
         builder.addSeparator("Входные данные", cc.xyw(1, 6, 6));

@@ -78,7 +78,9 @@ public class ActionStartButton implements ActionListener {
                 CollectStatistics.setAlgorithmName(algorithmLabel.getText());
                 FilterRules filterRules= WrapInProxy.wrapFilterRulesInpRoxy(new FilterRules());
                 filterRules.loadFilterRules(ruleField.getText());
-                // TODO:Добавить логику подключения алгоритма в зависимости от текста в algorithmLabel
+                // TODO:Добавить логику подключения алгоритма в зависимости от текста в
+//                Class clazz = Class.forName("SimpleAlgorithm");
+//                clazz.getConstructor().newInstance()
                 AbstractAlgorithm simpleAlg = WrapInProxy.wrapAlgorithmInProxy(new SimpleAlgorithm());
                 simpleAlg.setFilterRules(filterRules);
 
