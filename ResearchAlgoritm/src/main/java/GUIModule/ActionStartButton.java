@@ -27,7 +27,8 @@ public class ActionStartButton implements ActionListener {
     JDialog progressWindow;
 
 
-    ArrayList<HashMap<String,Object>> previousStart;
+    ArrayList<HashMap<String,Object>> previousStartStatistics;
+    ArrayList<ArrayList<String>> previousStartResult;
     private int runNumber;
 
 
@@ -40,7 +41,8 @@ public class ActionStartButton implements ActionListener {
         this.table = table;
         this.mainFrame = mainFrame;
 
-        previousStart = new ArrayList<HashMap<String,Object>>();
+        previousStartStatistics = new ArrayList<HashMap<String,Object>>();
+        previousStartResult = new ArrayList<ArrayList<String>>();
         runNumber = 0;
         initProgressWindow();
     }
@@ -99,7 +101,8 @@ public class ActionStartButton implements ActionListener {
 
                 updateTableInformation(CollectStatistics.getSummaryStatistics(), table, runNumber);
                 runNumber++;
-                previousStart.add(CollectStatistics.getFullStatistics());
+                previousStartStatistics.add(CollectStatistics.getFullStatistics());
+                previousStartResult.add(CollectStatistics.getResult());
                 CollectStatistics.resetAll();
                 FilterRules.resetFilterRules();
                 progressWindow.setVisible(false);
@@ -129,7 +132,10 @@ public class ActionStartButton implements ActionListener {
         return -1;
     }
 
-    public  ArrayList<HashMap<String,Object>> getPreviousStart(){
-        return previousStart;
+    public ArrayList<HashMap<String, Object>> getPreviousStartStatistics() {
+        return previousStartStatistics;
+    }
+    public ArrayList<ArrayList<String>> getPreviousStartResult(){
+        return previousStartResult;
     }
 }

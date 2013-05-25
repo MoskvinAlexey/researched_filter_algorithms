@@ -20,16 +20,22 @@ public class TableToolBar extends JToolBar {
         startButton.setMargin(margins);
 
         ToolBarButton fullReportButton = new ToolBarButton("data/report.png");
-        fullReportButton.addActionListener(new ActionFullReportButton(table, startButtonAction.getPreviousStart()));
+        fullReportButton.addActionListener(new ActionFullReportButton(table, startButtonAction.getPreviousStartStatistics()));
         add(fullReportButton);
-        fullReportButton.setToolTipText("Подроный отчет");
+        fullReportButton.setToolTipText("Подробный отчет");
         fullReportButton.setMargin(margins);
 
         ToolBarButton compareFullReportButton = new ToolBarButton("data/compare.png");
         compareFullReportButton.addActionListener(new ActionCompareFullReportButton(table,
-                                                                                startButtonAction.getPreviousStart()));
+                                                                                startButtonAction.getPreviousStartStatistics()));
         add(compareFullReportButton);
-        compareFullReportButton.setToolTipText("Сравнить результаты");
+        compareFullReportButton.setToolTipText("Сравнить запуски");
+
+        ToolBarButton resultsButton = new ToolBarButton("data/results.png");
+        resultsButton.addActionListener(new ActionResultsReport(table,startButtonAction.getPreviousStartResult()));
+        add(resultsButton);
+        resultsButton.setToolTipText("Результат классификации");
+
         compareFullReportButton.setMargin(margins);
         setTextLabels(true);
     }

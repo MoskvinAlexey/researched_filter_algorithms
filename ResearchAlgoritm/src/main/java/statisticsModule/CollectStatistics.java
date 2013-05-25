@@ -61,7 +61,7 @@ public class CollectStatistics {
         full.put("Общее время выполнения алгоритма",calculateTotalRunningTime(runningTime));
         full.put("Время подготовки для 10 пакетов",calculatePreparationTime());
         full.put("Общее время подготовки алгоритма",calculateTotalRunningTime(preparationTime));
-        full.put("Применено правил к пакету (в среднем)", calcEverageNumbreOfRules());
+        full.put("Применено правил к пакету (в среднем)", calcEverageNumberOfRules());
         return full;
     }
 
@@ -73,7 +73,7 @@ public class CollectStatistics {
         return newRunningTime;
     }
 
-    private static int calcEverageNumbreOfRules() {
+    private static int calcEverageNumberOfRules() {
         int sum = 0;
         for (int i=0;i<numberOfRulesApplyToOnePacket.size();i++){
            sum+=numberOfRulesApplyToOnePacket.get(i);
@@ -101,6 +101,7 @@ public class CollectStatistics {
         numberOfRulesApplyToOnePacket.clear();
         numberOfPackets=0;
         numberRules=0;
+        results.clear();
     }
 
     private static double calculateTotalRunningTime(List<Double> times){
@@ -112,6 +113,11 @@ public class CollectStatistics {
     }
 
 
-
-
+    public static ArrayList<String> getResult() {
+        ArrayList<String> newResult = new ArrayList<String>();
+        for(int i=0;i<results.size();i++){
+            newResult.add(results.get(i));
+        }
+        return  newResult;
+    }
 }

@@ -22,7 +22,7 @@ public class ControlAlgorithm implements Runnable {
         Object packet = algorithm.prepare(packetInByte);
         String result = algorithm.applyAlgorithm(packet);
         System.out.println("To packet № " + count + " apply rule " + result);
-        CollectStatistics.addResults("To packet № " + count + " apply rule " + result);
+        CollectStatistics.addResults("К пакету № " + count + " применили правило " + result);
         count++;
     }
 

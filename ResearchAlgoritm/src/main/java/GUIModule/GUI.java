@@ -5,13 +5,12 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import javax.swing.*;
-import javax.swing.plaf.IconUIResource;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static javax.swing.ScrollPaneConstants.*;
+
 
 
 public class GUI extends JFrame {
@@ -20,6 +19,7 @@ public class GUI extends JFrame {
     JLabel algorithmLabel;
     JTextField trafficField;
     JTextField ruleField;
+    String [] algorithmList = {"Последовательный поиск","Дерево решений"};
 
     public GUI(){
         super("Исследование алгоритмов классификации пакетного трафика");
@@ -91,14 +91,20 @@ public class GUI extends JFrame {
                 //putValue(AbstractAction.SMALL_ICON, new IconUIResource());
             }
 
-            @Override
+
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showInputDialog(GUI.this, new String[] {"1", "2"});
+
+                Object algorithmName = JOptionPane.showInputDialog(GUI.this, "Выберите алгоритм", "Выбор алгоритма фильтрации",
+                        JOptionPane.QUESTION_MESSAGE, null, algorithmList,"Titan");
+                if(algorithmName!=null){
+                    algorithmLabel.setText((String) algorithmName);
+                }
+
             }
         });
 
         builder.add(button, cc.xy(1,4));
-        algorithmLabel = new JLabel("Последовательный поиск");
+        algorithmLabel = new JLabel("Алгоритм не выбран");
         builder.add(algorithmLabel, cc.xyw(3, 4, 3));
         builder.addSeparator("Входные данные", cc.xyw(1, 6, 6));
 
