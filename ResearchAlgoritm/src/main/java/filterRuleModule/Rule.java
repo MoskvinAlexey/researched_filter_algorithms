@@ -40,7 +40,7 @@ public class Rule implements Comparable {
 
 
     public static boolean compareIp(String ipInRule, String ipInPacket) {
-        if(ipInRule.equals("any")){
+        if(ipInRule.equals("any") || ipInPacket.equals("any") || ipInPacket == null){
             return true;
         }
         else
@@ -88,7 +88,7 @@ public class Rule implements Comparable {
 
     public static boolean comparePort(String portInRule, String portInPacket) {
 
-        if(portInRule.equals(portInPacket) || portInRule.equals("any"))
+        if(portInRule.equals(portInPacket) || portInRule.equals("any")||portInPacket.equals("any")||portInPacket==null)
             return true;
         else{
             String[] partsPortInRule = portInRule.split(",");
@@ -112,6 +112,7 @@ public class Rule implements Comparable {
     }
 
     public static boolean compareProtocol(String protocolInRule, String protocolInPacket){
+        if(protocolInPacket.equals("any") || protocolInPacket == null) return true;
         String [] partsProtocolInRule = protocolInRule.split(",");
         if(partsProtocolInRule.length==1)
             return protocolInRule.equals(protocolInPacket) || protocolInRule.equals("any");

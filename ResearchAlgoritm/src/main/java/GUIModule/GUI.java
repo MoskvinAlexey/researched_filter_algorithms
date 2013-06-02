@@ -1,6 +1,7 @@
 package GUIModule;
 
 
+import algorithmModule.ControlAlgorithm;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -9,8 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-
+import java.util.Set;
 
 
 public class GUI extends JFrame {
@@ -19,7 +19,7 @@ public class GUI extends JFrame {
     JLabel algorithmLabel;
     JTextField trafficField;
     JTextField ruleField;
-    String [] algorithmList = {"Последовательный поиск","Дерево решений"};
+    //String [] algorithmList = {"Последовательный поиск","Дерево решений"};
 
     public GUI(){
         super("Исследование алгоритмов классификации пакетного трафика");
@@ -88,12 +88,13 @@ public class GUI extends JFrame {
             {
                 putValue(AbstractAction.NAME, "Выбрать алгоритм");
                 putValue(AbstractAction.SHORT_DESCRIPTION, "Выбрать алгоритм фильтрации");
-                //putValue(AbstractAction.SMALL_ICON, new IconUIResource());
+
             }
 
 
             public void actionPerformed(ActionEvent e) {
-
+                Set<String> algNames = ControlAlgorithm.getAllAlgorithmsName();
+                Object [] algorithmList = algNames.toArray();
                 Object algorithmName = JOptionPane.showInputDialog(GUI.this, "Выберите алгоритм", "Выбор алгоритма фильтрации",
                         JOptionPane.QUESTION_MESSAGE, null, algorithmList,"Titan");
                 if(algorithmName!=null){

@@ -5,6 +5,7 @@ package GUIModule;
 import algorithmModule.AbstractAlgorithm;
 import algorithmModule.ControlAlgorithm;
 import algorithmModule.SimpleAlgorithm;
+import algorithmModule.TreeAlgorithm;
 import filterRuleModule.FilterRules;
 import statisticsModule.WrapInProxy;
 import trafficModule.TrafficGenerator;
@@ -18,6 +19,7 @@ public class ConsoleStart {
 
 
         AbstractAlgorithm simpleAlg = WrapInProxy.wrapAlgorithmInProxy(new SimpleAlgorithm());
+        //AbstractAlgorithm simpleAlg = WrapInProxy.wrapAlgorithmInProxy(new TreeAlgorithm());
         simpleAlg.setFilterRules(filterRules);
 
         ControlAlgorithm algUnderControl = new ControlAlgorithm();

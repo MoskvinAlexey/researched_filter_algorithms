@@ -1,8 +1,7 @@
 package GUIModule;
 
-import algorithmModule.AbstractAlgorithm;
-import algorithmModule.ControlAlgorithm;
-import algorithmModule.SimpleAlgorithm;
+
+import algorithmModule.*;
 import filterRuleModule.FilterRules;
 import statisticsModule.CollectStatistics;
 import statisticsModule.WrapInProxy;
@@ -80,14 +79,15 @@ public class ActionStartButton implements ActionListener {
                 CollectStatistics.setAlgorithmName(algorithmLabel.getText());
                 FilterRules filterRules= WrapInProxy.wrapFilterRulesInpRoxy(new FilterRules());
                 filterRules.loadFilterRules(ruleField.getText());
-                // TODO:Добавить логику подключения алгоритма в зависимости от текста в
-//                Class clazz = Class.forName("SimpleAlgorithm");
-//                clazz.getConstructor().newInstance()
-                AbstractAlgorithm simpleAlg = WrapInProxy.wrapAlgorithmInProxy(new SimpleAlgorithm());
-                simpleAlg.setFilterRules(filterRules);
+
+                Class clazz = Class.forName(ControlAlgorithm.getAlgorithmClassName(algorithmLabel.getText()));
+                AbstractAlgorithm algorithm = (AbstractAlgorithm) clazz.getConstructor().newInstance();
+
+                AbstractAlgorithm wrapAlgorithm = WrapInProxy.wrapAlgorithmInProxy(algorithm);
+                wrapAlgorithm.setFilterRules(filterRules);
 
                 ControlAlgorithm algUnderControl = new ControlAlgorithm();
-                algUnderControl.setAlgorithm(simpleAlg);
+                algUnderControl.setAlgorithm(wrapAlgorithm);
 
                 Thread th = new Thread(new TrafficGenerator(algUnderControl, trafficField.getText()));
                 //TODO: Добавить валидацию полей с путями до файлов: 1.поля пустые 2.файлы пустые 3.файлы не того формата

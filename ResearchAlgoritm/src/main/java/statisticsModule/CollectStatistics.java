@@ -109,7 +109,7 @@ public class CollectStatistics {
         for(Double time : times){
             fullRunningTime+=time;
         }
-        return fullRunningTime;
+        return (double)Math.round(fullRunningTime * 100) / 100;
     }
 
 

@@ -117,16 +117,6 @@ public class SimpleAlgorithm extends AbstractAlgorithm {
     }
 
 
-
-    protected long calcTimeOfFiltration(long t1, long t2) {
-        return t2 - t1;
-    }
-
-
-    protected long getCurrentTime() {
-        return System.currentTimeMillis();
-    }
-
     /**
      * Метод предназначен для перевод пакета типа JPacket в хэш таблицу
      * Метод анализирует заголовки пакета канального, сетевого и транспортного уровня. В зависимости от наличия заголовков
